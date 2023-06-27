@@ -129,7 +129,45 @@
                                         value="{{ $data['order_detail']->review_link }}" placeholder="AMZ Review Link">
                                 </div>
 
-                                @if (Auth::user()->role == 'pmm')
+                                @if (Auth::user()->role == 'admin')
+                                    <div class="col-md-6 mt-2">
+                                        <label>Status</label>
+                                        <select name="status" class="form-control" required>
+                                            <option value="" selected disabled>Choose status</option>
+                                            <option value="Onhold"
+                                                {{ $data['order_detail']->status == 'Onhold' ? 'selected' : '' }}>Onhold
+                                            </option>
+                                            <option value="Reviewed"
+                                                {{ $data['order_detail']->status == 'Reviewed' ? 'selected' : '' }}>
+                                                Reviewed
+                                            </option>
+                                            <option value="Ordered"
+                                                {{ $data['order_detail']->status == 'Ordered' ? 'selected' : '' }}>Ordered
+                                            </option>
+                                            <option value="Delivered"
+                                                {{ $data['order_detail']->status == 'Delivered' ? 'selected' : '' }}>Review
+                                                Submitted Pending Refund</option>
+                                            <option value="Refunded"
+                                                {{ $data['order_detail']->status == 'Refunded' ? 'selected' : '' }}>
+                                                Refunded
+                                            </option>
+                                            <option value="Pending"
+                                                {{ $data['order_detail']->status == 'Pending' ? 'selected' : '' }}>Refunded
+                                                Pending Review</option>
+                                            <option value="ReviewedDeleted"
+                                                {{ $data['order_detail']->status == 'ReviewedDeleted' ? 'selected' : '' }}>
+                                                Reviewed Deleted</option>
+                                            <option value="Cancelled"
+                                                {{ $data['order_detail']->status == 'Cancelled' ? 'selected' : '' }}>
+                                                Cancelled
+                                            </option>
+                                            <option value="Completed"
+                                                {{ $data['order_detail']->status == 'Completed' ? 'selected' : '' }}>
+                                                Completed
+                                            </option>
+                                        </select>
+                                    </div>
+                                    @elseif (Auth::user()->role == 'pmm')
                                     <div class="col-md-6 mt-2">
                                         <label>Status</label>
                                         <select name="status" class="form-control" required>

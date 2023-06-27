@@ -50,9 +50,26 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="javascript:void(0)" class="btn btn-success btn-sm btn_status"
+                                            @php  $status='';   @endphp
+                                            @isset($user->status)
+                                                @if ($user->status == 1)
+                                                    {{ $status = 'checked' }}
+                                                @else
+                                                    {{ $status = '' }}
+                                                @endif
+                                            @endisset
+                                            <center>
+                                                <div class="form-group" style="display: inline-flex">
+                                                    <label class="switch">
+                                                        <input type="checkbox" {{ $status }} class="radio-button"
+                                                            name="auto_save" data="{{ $user->id }}">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </div>
+                                            </center>
+                                            {{-- <a href="javascript:void(0)" class="btn btn-success btn-sm btn_status"
                                                 data="{{ $user->id }}">Change
-                                                Status</a>
+                                                Status</a> --}}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -70,47 +87,75 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
+
             //status update
-            $('#customerTable').on('click', '.btn_status', function() {
+            $('.radio-button').on('change', function() {
 
                 var id = $(this).attr('data');
-                $('.btn_status').text('Wait...');
-                $(".btn_status").prop("disabled", true);
-                // alert(id);
 
                 $.ajax({
-                    url: '{{ url('/customers-status') }}',
-                    type: 'get',
-                    async: false,
-                    dataType: 'json',
+                    type: 'ajax',
+                    method: 'get',
+                    url: '{{ url('customers-status') }}',
                     data: {
                         id: id
                     },
+                    async: false,
+                    dataType: 'json',
                     success: function(response) {
-
-                        if (response.status == 200) {
-                            $('.btn_status').text('Change Status');
-                            $(".btn_status").prop("disabled", false);
-                            alert(response.message);
-                            // toastr.success(response.message);
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 1000);
-                        } else {
-                            $('.btn_status').text('Change Status');
-                            $(".btn_status").prop("disabled", false);
-                        }
-
+                        window.location.reload();
                     },
                     error: function() {
                         toastr.error('something went wrong');
-                        $('.btn_status').text('Change Status');
-                        $(".btn_status").prop("disabled", false);
-                    }
+
+                    },
 
                 });
 
+
             });
+
+
+            // $('#customerTable').on('click', '.btn_status', function() {
+
+            //     var id = $(this).attr('data');
+            //     $('.btn_status').text('Wait...');
+            //     $(".btn_status").prop("disabled", true);
+            //     // alert(id);
+
+            //     $.ajax({
+            //         url: '{{ url('/customers-status') }}',
+            //         type: 'get',
+            //         async: false,
+            //         dataType: 'json',
+            //         data: {
+            //             id: id
+            //         },
+            //         success: function(response) {
+
+            //             if (response.status == 200) {
+            //                 $('.btn_status').text('Change Status');
+            //                 $(".btn_status").prop("disabled", false);
+            //                 alert(response.message);
+            //                 // toastr.success(response.message);
+            //                 setTimeout(() => {
+            //                     window.location.reload();
+            //                 }, 1000);
+            //             } else {
+            //                 $('.btn_status').text('Change Status');
+            //                 $(".btn_status").prop("disabled", false);
+            //             }
+
+            //         },
+            //         error: function() {
+            //             toastr.error('something went wrong');
+            //             $('.btn_status').text('Change Status');
+            //             $(".btn_status").prop("disabled", false);
+            //         }
+
+            //     });
+
+            // });
         });
     </script>
 @endsection

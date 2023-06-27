@@ -9,10 +9,10 @@
 
             <div class="row align-items-center">
                 <div class="col">
-                    <h3 class="page-title">All Orders</h3>
+                    <h3 class="page-title">Completed</h3>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ url('home') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">All Orders</li>
+                        <li class="breadcrumb-item active">Completed</li>
                     </ul>
                 </div>
             </div>
@@ -20,11 +20,11 @@
 
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title mb-0">All Orders</h4>
+                <h4 class="card-title mb-0">Completed</h4>
             </div>
             <div class="card-body">
 
-                <form action="{{ url('all_orders') }}" method="POST">
+                <form action="{{ url('completed') }}" method="POST">
                     @csrf
                     <div class="row">
                         <div class="col-md-3">
@@ -70,14 +70,14 @@
                                 <th>Customer Email</th>
                                 <th>Market</th>
                                 <th>Type</th>
-                                <th>Create Date</th>
+                                <th>Update Date</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="ordersTable">
-                            @if (count($data['orders']) > 0)
-                                @foreach ($data['orders'] as $key => $order)
+                            @if (count($data['completed']) > 0)
+                                @foreach ($data['completed'] as $key => $order)
                                     <tr class="text-center text-secondary">
                                         <td >{{ $order->order_limit }}</td>
                                         <td>{{ $order->users->name }}</td>
@@ -89,7 +89,7 @@
                                         <td>{{ $order->c_email }}</td>
                                         <td>{{ $order->products->market }}</td>
                                         <td>{{ $order->products->prod_type }}</td>
-                                        <td>{{ $order->date }}</td>
+                                        <td>{{ $order->updated_at }}</td>
                                         <td>{{ $order->status }}</td>
                                         <td>
                                             <a href="{{ url('order_detail/' . $order->order_limit) }}"
@@ -105,7 +105,7 @@
 
                 </div>
                 <div class="float-right mt-3">
-                    {{ $data['orders']->links('pagination::bootstrap-4') }}
+                    {{ $data['completed']->links('pagination::bootstrap-4') }}
                 </div>
 
             </div>
@@ -117,37 +117,7 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
-            //status update
-            $('#productTable').on('click', '.btn_product_status', function() {
 
-                var id = $(this).attr('data');
-
-                $.ajax({
-                    url: '{{ url('/update_status') }}',
-                    type: 'get',
-                    async: false,
-                    dataType: 'json',
-                    data: {
-                        id: id
-                    },
-                    success: function(response) {
-
-                        if (response.status == 200) {
-                            alert(response.message);
-                            // toastr.success(response.message);
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 1000);
-                        }
-
-                    },
-                    error: function() {
-                        alert('somthing went wrong');
-                    }
-
-                });
-
-            });
         });
     </script>
 @endsection

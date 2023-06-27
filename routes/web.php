@@ -50,9 +50,19 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('remove_reservation', [ProductController::class, 'removeReservation']);
 
     //Order Routes
-    Route::get('all_orders', [OrderController::class, 'index']);
+    Route::any('all_orders', [OrderController::class, 'index']);
     Route::get('create_order/{product_no?}', [OrderController::class, 'createOrder']);
     Route::post('order_now', [OrderController::class, 'orderNow']);
     Route::get('order_detail/{order_limit}', [OrderController::class, 'orderDetail']);
     Route::post('update_order_detail', [OrderController::class, 'updateOrderDetail']);
+
+    Route::any('ordered', [OrderController::class, 'Ordered']);
+    Route::any('reviewed', [OrderController::class, 'Reviewed']);
+    Route::any('delivered', [OrderController::class, 'Delivered']);
+    Route::any('reviewed_deleted', [OrderController::class, 'ReviewedDeleted']);
+    Route::any('refunded', [OrderController::class, 'Refunded']);
+    Route::any('on_hold', [OrderController::class, 'onHold']);
+    Route::any('pending', [OrderController::class, 'Pending']);
+    Route::any('cancelled', [OrderController::class, 'Cancelled']);
+    Route::any('completed', [OrderController::class, 'Completed']);
 });

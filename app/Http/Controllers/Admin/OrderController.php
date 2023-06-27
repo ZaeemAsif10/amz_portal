@@ -15,7 +15,24 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $data['orders'] = Order::paginate(10);
+        $qry = Order::query();
+
+        if ($request->isMethod('post')) {
+
+            $qry->when($request->c_email, function ($query, $c_email) {
+                return $query->where('c_email', $c_email);
+            });
+
+            $qry->when($request->product_no, function ($query, $product_no) {
+                return $query->where('product_no', $product_no);
+            });
+
+            $qry->when($request->order_no, function ($query, $order_no) {
+                return $query->where('order_no', 'like', '%' . $order_no . '%');
+            });
+        }
+
+        $data['orders'] = $qry->paginate(10);
         return view('order.order', compact('data'));
     }
 
@@ -101,8 +118,6 @@ class OrderController extends Controller
     public function updateOrderDetail(Request $request)
     {
         $order_detail = Order::where('order_limit', $request->edit_order_detail_id)->first();
-
-
         $order_detail->order_no = $request->order_no;
         $order_detail->review_link = $request->review_link;
         if ($request->status == 'Reviewed') {
@@ -153,5 +168,223 @@ class OrderController extends Controller
         if ($res) {
             return back();
         }
+    }
+
+    public function Ordered(Request $request)
+    {
+        $qry = Order::query();
+        $qry = $qry->where('status', 'Ordered');
+
+        if ($request->isMethod('post')) {
+
+            $qry->when($request->c_email, function ($query, $c_email) {
+                return $query->where('c_email', $c_email);
+            });
+
+            $qry->when($request->product_no, function ($query, $product_no) {
+                return $query->where('product_no', $product_no);
+            });
+
+            $qry->when($request->order_no, function ($query, $order_no) {
+                return $query->where('order_no', 'like', '%' . $order_no . '%');
+            });
+        }
+
+        $data['ordered'] = $qry->paginate(10);
+        return view('order.ordered', compact('data'));
+    }
+
+    public function Reviewed(Request $request)
+    {
+
+        $qry = Order::query();
+        $qry = $qry->where('status', 'Reviewed');
+
+        if ($request->isMethod('post')) {
+
+            $qry->when($request->c_email, function ($query, $c_email) {
+                return $query->where('c_email', $c_email);
+            });
+
+            $qry->when($request->product_no, function ($query, $product_no) {
+                return $query->where('product_no', $product_no);
+            });
+
+            $qry->when($request->order_no, function ($query, $order_no) {
+                return $query->where('order_no', 'like', '%' . $order_no . '%');
+            });
+        }
+
+        $data['reviewed'] = $qry->paginate(10);
+        return view('order.reviewed', compact('data'));
+    }
+
+    public function Delivered(Request $request)
+    {
+        $qry = Order::query();
+        $qry = $qry->where('status', 'Delivered');
+
+        if ($request->isMethod('post')) {
+
+            $qry->when($request->c_email, function ($query, $c_email) {
+                return $query->where('c_email', $c_email);
+            });
+
+            $qry->when($request->product_no, function ($query, $product_no) {
+                return $query->where('product_no', $product_no);
+            });
+
+            $qry->when($request->order_no, function ($query, $order_no) {
+                return $query->where('order_no', 'like', '%' . $order_no . '%');
+            });
+        }
+
+        $data['delivered'] = $qry->paginate(10);
+        return view('order.review_submited_pending', compact('data'));
+    }
+
+    public function ReviewedDeleted(Request $request)
+    {
+        $qry = Order::query();
+        $qry = $qry->where('status', 'ReviewedDeleted');
+
+        if ($request->isMethod('post')) {
+
+            $qry->when($request->c_email, function ($query, $c_email) {
+                return $query->where('c_email', $c_email);
+            });
+
+            $qry->when($request->product_no, function ($query, $product_no) {
+                return $query->where('product_no', $product_no);
+            });
+
+            $qry->when($request->order_no, function ($query, $order_no) {
+                return $query->where('order_no', 'like', '%' . $order_no . '%');
+            });
+        }
+
+        $data['reviewed_deleted'] = $qry->paginate(10);
+        return view('order.review_deleted', compact('data'));
+    }
+
+    public function Refunded(Request $request)
+    {
+
+        $qry = Order::query();
+        $qry = $qry->where('status', 'Refunded');
+
+        if ($request->isMethod('post')) {
+
+            $qry->when($request->c_email, function ($query, $c_email) {
+                return $query->where('c_email', $c_email);
+            });
+
+            $qry->when($request->product_no, function ($query, $product_no) {
+                return $query->where('product_no', $product_no);
+            });
+
+            $qry->when($request->order_no, function ($query, $order_no) {
+                return $query->where('order_no', 'like', '%' . $order_no . '%');
+            });
+        }
+
+        $data['refunded'] = $qry->paginate(10);
+        return view('order.refunded', compact('data'));
+    }
+
+    public function onHold(Request $request)
+    {
+        $qry = Order::query();
+        $qry = $qry->where('status', 'Onhold');
+
+        if ($request->isMethod('post')) {
+
+            $qry->when($request->c_email, function ($query, $c_email) {
+                return $query->where('c_email', $c_email);
+            });
+
+            $qry->when($request->product_no, function ($query, $product_no) {
+                return $query->where('product_no', $product_no);
+            });
+
+            $qry->when($request->order_no, function ($query, $order_no) {
+                return $query->where('order_no', 'like', '%' . $order_no . '%');
+            });
+        }
+
+        $data['on_hold'] = $qry->paginate(10);
+        return view('order.on_hold', compact('data'));
+    }
+
+    public function Pending(Request $request)
+    {
+        $qry = Order::query();
+        $qry = $qry->where('status', 'Pending');
+
+        if ($request->isMethod('post')) {
+
+            $qry->when($request->c_email, function ($query, $c_email) {
+                return $query->where('c_email', $c_email);
+            });
+
+            $qry->when($request->product_no, function ($query, $product_no) {
+                return $query->where('product_no', $product_no);
+            });
+
+            $qry->when($request->order_no, function ($query, $order_no) {
+                return $query->where('order_no', 'like', '%' . $order_no . '%');
+            });
+        }
+
+        $data['pending'] = $qry->paginate(10);
+        return view('order.pending', compact('data'));
+    }
+
+    public function Cancelled(Request $request)
+    {
+        $qry = Order::query();
+        $qry = $qry->where('status', 'Cancelled');
+
+        if ($request->isMethod('post')) {
+
+            $qry->when($request->c_email, function ($query, $c_email) {
+                return $query->where('c_email', $c_email);
+            });
+
+            $qry->when($request->product_no, function ($query, $product_no) {
+                return $query->where('product_no', $product_no);
+            });
+
+            $qry->when($request->order_no, function ($query, $order_no) {
+                return $query->where('order_no', 'like', '%' . $order_no . '%');
+            });
+        }
+
+        $data['cancelled'] = $qry->paginate(10);
+        return view('order.cancelled', compact('data'));
+    }
+
+    public function Completed(Request $request)
+    {
+        $qry = Order::query();
+        $qry = $qry->where('status', 'Completed');
+
+        if ($request->isMethod('post')) {
+
+            $qry->when($request->c_email, function ($query, $c_email) {
+                return $query->where('c_email', $c_email);
+            });
+
+            $qry->when($request->product_no, function ($query, $product_no) {
+                return $query->where('product_no', $product_no);
+            });
+
+            $qry->when($request->order_no, function ($query, $order_no) {
+                return $query->where('order_no', 'like', '%' . $order_no . '%');
+            });
+        }
+
+        $data['completed'] = $qry->paginate(10);
+        return view('order.completed', compact('data'));
     }
 }
