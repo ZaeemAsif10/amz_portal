@@ -71,10 +71,17 @@
                         <div class="col-md-4 mt-2">
                             <input type="text" name="keyword" class="form-control" placeholder="keyword...">
                         </div>
-                        <div class="col-md-4 mt-2">
-                            <input type="text" name="chi_seller" class="form-control"
-                                placeholder="Search by chinese seller...">
-                        </div>
+                        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'pmm')
+                            <div class="col-md-4 mt-2">
+                                <input type="text" name="chi_seller" class="form-control"
+                                    placeholder="Search by chinese seller...">
+                            </div>
+                        @else
+                            <div class="col-md-4 mt-2">
+                                <input type="text" name="seller_id" class="form-control"
+                                    placeholder="Search by seller ID...">
+                            </div>
+                        @endif
                         <div class="col-md-4 mt-2">
                             <button type="submit" class="btn btn-primary w-100"><i class="fa fa-search"></i></button>
                         </div>
@@ -136,7 +143,8 @@
                                                         @csrf
                                                         <input type="hidden" name="product_no"
                                                             value="{{ $product->product_no }}">
-                                                        <input type="hidden" name="id" value="{{ $product->id }}">
+                                                        <input type="hidden" name="id"
+                                                            value="{{ $product->id }}">
                                                         <button type="submit" class="btn btn-secondary btn-sm">Reserve
                                                             Now</button>
                                                     </form>
