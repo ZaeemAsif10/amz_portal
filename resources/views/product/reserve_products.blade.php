@@ -1,5 +1,7 @@
 @extends('setup.master')
 
+@section('title', 'Reserve Products')
+
 @section('content')
     <!-- Page Content -->
     <div class="content container-fluid">
@@ -42,19 +44,19 @@
                                 @foreach ($data['reserve_products'] as $key => $reserve)
                                     <tr class="text-center">
                                         <td>{{ $key + 1 }}</td>
-                                        <td>{{ $reserve->users->name }}</td>
-                                        <td>{{ $reserve->products->product_no }}</td>
+                                        <td>{{ $reserve->users->name ?? '' }}</td>
+                                        <td>{{ $reserve->products->product_no ?? '' }}</td>
                                         <td>
-                                            <img src="{{ url('public/uploads/image/' . $reserve->products->image) }}"
+                                            <img src="{{ url('public/uploads/image/' . ($reserve->products->image ?? '')) }}"
                                                 width="40" height="40" alt="No Image">
                                         </td>
                                         <td>
                                             @if (Auth::user()->role == 'pm')
-                                                <a href="{{ url('create_order/' . $reserve->products->product_no) }}"
+                                                <a href="{{ url('create_order/' . ($reserve->products->product_no?? '')) }}"
                                                     class="btn btn-success btn-sm">Create Order</a>
                                             @endif
                                             <input type="hidden" name="product_id" id="product_id"
-                                                value="{{ $reserve->products->id }}">
+                                                value="{{ $reserve->products->id ?? '' }}">
                                             <input type="hidden" name="id" id="id" value="{{ $reserve->id }}">
                                             <button type="submit" class="btn btn-danger btn-sm remove_btn">Remove</button>
                                         </td>

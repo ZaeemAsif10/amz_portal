@@ -1,5 +1,7 @@
 @extends('setup.master')
 
+@section('title', 'Orders')
+
 @section('content')
     <!-- Page Content -->
     <div class="content container-fluid">
@@ -43,27 +45,28 @@
                         </div>
                 </form>
 
-                @if (Session::has('success'))
-                    <div class="alert alert-success alert-dismissible mt-3" role="alert">
-                        <button type="button" class="close" data-dismiss="alert">
-                            <i class="fa fa-times"></i>
-                        </button>
-                        {{ session('success') }}
-                    </div>
-                @elseif (Session::has('error'))
-                    <div class="alert alert-danger alert-dismissible mt-3" role="alert">
-                        <button type="button" class="close" data-dismiss="alert">
-                            <i class="fa fa-times"></i>
-                        </button>
-                        {{ session('error') }}
-                    </div>
-                @endif
+
 
                 <div class="table-responsive mt-5">
+                    @if (Session::has('success'))
+                        <div class="alert alert-success alert-dismissible mt-3" role="alert">
+                            <button type="button" class="close" data-dismiss="alert">
+                                <i class="fa fa-times"></i>
+                            </button>
+                            {{ session('success') }}
+                        </div>
+                    @elseif (Session::has('error'))
+                        <div class="alert alert-danger alert-dismissible mt-3" role="alert">
+                            <button type="button" class="close" data-dismiss="alert">
+                                <i class="fa fa-times"></i>
+                            </button>
+                            {{ session('error') }}
+                        </div>
+                    @endif
                     <table class="table table-nowrap mb-0">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>Orders</th>
                                 <th>User</th>
                                 <th>Order Number</th>
                                 <th>Product</th>
@@ -79,7 +82,7 @@
                             @if (count($data['orders']) > 0)
                                 @foreach ($data['orders'] as $key => $order)
                                     <tr class="text-center text-secondary">
-                                        <td >{{ $order->order_limit }}</td>
+                                        <td>{{ $order->order_limit }}</td>
                                         <td>{{ $order->users->name }}</td>
                                         <td>{{ $order->order_no }}</td>
                                         <td>

@@ -1,5 +1,7 @@
 @extends('setup.master')
 
+@section('title', 'Disabled Product')
+
 @section('content')
     <!-- Page Content -->
     <div class="content container-fluid">
@@ -29,7 +31,7 @@
                     <table class="table table-nowrap mb-0">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>Seller</th>
                                 <th>Market</th>
                                 <th>Sale Limit</th>
                                 <th>Today Remaining</th>
@@ -44,8 +46,12 @@
                         <tbody id="productTable">
                             @if (count($data['products']) > 0)
                                 @foreach ($data['products'] as $key => $product)
-                                    <tr class="text-center">
-                                        <td>{{ $key + 1 }}</td>
+                                    <tr class="text-center text-secondary">
+                                        <td>
+                                            <img src="{{ url('public/assets/whats/whats2.jpg') }}" width="40" height="40"
+                                                alt="">
+                                            <p>{{ $product->users->seller_id }}</p>
+                                        </td>
                                         <td>{{ $product->market }}</td>
                                         <td>{{ $product->day_sale }}</td>
                                         <td>{{ $product->tot_remaining }}</td>

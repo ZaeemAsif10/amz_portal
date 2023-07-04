@@ -1,5 +1,7 @@
 @extends('setup.master')
 
+@section('title', 'Products')
+
 @section('content')
     <!-- Page Content -->
     <div class="content container-fluid">
@@ -108,14 +110,14 @@
                     <table class="table table-nowrap mb-0">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>Seller</th>
+                                <th>Product ID</th>
                                 <th>Market</th>
                                 <th>Sale Limit</th>
                                 <th>Today Remaining</th>
                                 <th>Total Remaining</th>
                                 <th>Commission</th>
                                 <th>Keyword</th>
-                                <th>Product ID</th>
                                 <th>Image</th>
                                 <th>Action</th>
                             </tr>
@@ -123,15 +125,21 @@
                         <tbody id="productTable">
                             @if (count($data['products']) > 0)
                                 @foreach ($data['products'] as $key => $product)
-                                    <tr class="text-center">
-                                        <td>{{ $key + 1 }}</td>
+                                    <tr class="text-center text-secondary">
+                                        <td>
+                                            <img src="{{ url('public/assets/whats/whats2.jpg') }}" width="40"
+                                                height="40" alt="">
+                                            <p>{{ $product->seller_id }}</p>
+                                        </td>
+                                        <td><a
+                                                href="{{ url('product_detail/' . $product->product_no) }}">{{ $product->product_no }}</a>
+                                        </td>
                                         <td>{{ $product->market }}</td>
                                         <td>{{ $product->day_sale }}</td>
                                         <td>{{ $product->tot_remaining }}</td>
                                         <td>{{ $product->tot_sale }}</td>
                                         <td>{{ $product->commission }}</td>
                                         <td>{{ $product->keyword }}</td>
-                                        <td>{{ $product->product_no }}</td>
                                         <td>
                                             <img src="{{ url('public/uploads/image/' . $product->image) }}" width="30"
                                                 height="40" alt="No Image">

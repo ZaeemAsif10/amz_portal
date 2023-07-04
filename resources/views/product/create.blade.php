@@ -1,5 +1,7 @@
 @extends('setup.master')
 
+@section('title', 'Create Product')
+
 @section('content')
     <!-- Page Content -->
     <div class="content container-fluid">

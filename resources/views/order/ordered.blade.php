@@ -1,5 +1,7 @@
 @extends('setup.master')
 
+@section('title', 'Ordered')
+
 @section('content')
     <!-- Page Content -->
     <div class="content container-fluid">

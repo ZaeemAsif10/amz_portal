@@ -1,5 +1,7 @@
 @extends('setup.login_master')
 
+@section('login_title', 'Login')
+
 @section('login_content')
     <div class="account-content">
         <div class="container">

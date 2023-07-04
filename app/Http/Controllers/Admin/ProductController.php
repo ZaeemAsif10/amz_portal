@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Reserve;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -14,7 +15,8 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $qry = Product::query();
+        $qry = User::join('products', 'users.id', '=', 'products.user_id')
+            ->select('products.*', 'users.seller_id');
 
         if ($request->isMethod('post')) {
 
@@ -36,6 +38,10 @@ class ProductController extends Controller
 
             $qry->when($request->chi_seller, function ($query, $chi_seller) {
                 return $query->where('chi_seller', $chi_seller);
+            });
+
+            $qry->when($request->seller_id, function ($query, $seller_id) {
+                return $query->where('users.seller_id', $seller_id);
             });
         }
 

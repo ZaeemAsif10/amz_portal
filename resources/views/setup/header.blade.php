@@ -3,7 +3,7 @@
 
     <!-- Logo -->
     <div class="header-left">
-        <a href="index.html" class="logo">
+        <a href="{{ url('home') }}" class="logo">
             <img src="assets/img/logo.png" width="40" height="40" alt="">
         </a>
     </div>
@@ -25,7 +25,7 @@
 
 
         <!-- Notifications -->
-        <li class="nav-item dropdown">
+        {{-- <li class="nav-item dropdown">
             <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
                 <i class="fa fa-bell-o"></i> <span class="badge badge-pill">3</span>
             </a>
@@ -107,7 +107,7 @@
                     <a href="activities.html">View all Notifications</a>
                 </div>
             </div>
-        </li>
+        </li> --}}
         <!-- /Notifications -->
 
         <li class="nav-item dropdown has-arrow main-drop">

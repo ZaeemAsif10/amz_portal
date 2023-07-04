@@ -100,8 +100,17 @@ class RegisterController extends Controller
         $user->account_h_name = $request->account_h_name;
         $user->account_no = $request->account_no;
         $user->role = $request->role;
+        $seller_id = User::orderBy('id', 'DESC')->pluck('seller_id')->first();
+        if ($seller_id == null or $seller_id == "") {
+            #If Table is Empty
+            $seller_id = 1;
+        } else {
+            #If Table has Already some Data
+            $seller_id = $seller_id + 1;
+        }
+        $user->seller_id = $seller_id;
 
-         if ($request->hasFile('cnic_front')) {
+        if ($request->hasFile('cnic_front')) {
             $file = $request->file('cnic_front');
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '.' . $extension;

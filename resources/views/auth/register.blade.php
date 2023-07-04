@@ -1,5 +1,7 @@
 @extends('setup.login_master')
 
+@section('login_title', 'Signup')
+
 @section('login_content')
     <div class="container">
         <div class="row justify-content-center">
