@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
 use App\Models\Product;
@@ -64,4 +65,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('pending', [OrderController::class, 'Pending']);
     Route::any('cancelled', [OrderController::class, 'Cancelled']);
     Route::any('completed', [OrderController::class, 'Completed']);
+
+    //Report route
+    Route::any('report', [ReportController::class, 'index']);
 });

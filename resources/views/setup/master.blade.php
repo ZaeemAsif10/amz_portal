@@ -23,6 +23,9 @@
     <!-- Lineawesome CSS -->
     <link rel="stylesheet" href="{{ asset('public/assets/css/line-awesome.min.css') }}">
 
+    <!-- Toaster CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('public/assets/css/toastr.css') }}">
+
     <!-- Main CSS -->
     <link rel="stylesheet" href="{{ asset('public/assets/css/style.css') }}">
 
@@ -60,6 +63,9 @@
     <!-- jQuery -->
     <script src="{{ asset('public/assets/js/jquery-3.5.1.min.js') }}"></script>
 
+    <!-- Toaster Js -->
+    <script src="{{ asset('public/assets/js/toastr.min.js') }}"></script>
+
     <!-- Bootstrap Core JS -->
     <script src="{{ asset('public/assets/js/popper.min.js') }}"></script>
     <script src="{{ asset('public/assets/js/bootstrap.min.js') }}"></script>
@@ -69,6 +75,7 @@
 
     <!-- Custom JS -->
     <script src="{{ asset('public/assets/js/app.js') }}"></script>
+
      <!-- CDN for Sweet Alert -->
      <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
