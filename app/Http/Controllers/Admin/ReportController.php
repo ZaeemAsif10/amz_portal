@@ -21,22 +21,36 @@ class ReportController extends Controller
             'orders.refund_date',
             'orders.review_date',
             'orders.status',
+            'orders.date',
             'products.market',
             'products.chi_seller',
             'products.commission',
-            'products.prod_type'
+            'products.prod_type',
+            'products.pmnl_commission'
         );
 
-
+        $qry = $qry->where('users.role','pm');
+        $qry = $qry->where('orders.status', $request->status);
         $qry = $qry->orderBy('id', 'asc');
 
         if ($request->isMethod('post')) {
+
+            $month = $request->month;
+            $year = $request->year;
 
             $qry->when($request->status, function ($query, $status) {
                 return $query->where('orders.status', $status);
             });
 
-            $data['reports'] = $qry->where('orders.status', 'Ordered')->get();
+            $qry->when($month, function ($query, $month) {
+                return $query->whereMonth('orders.date', $month);
+            });
+
+            $qry->when($year, function ($query, $year) {
+                return $query->whereYear('orders.date', $year);
+            });
+
+            $data['reports'] = $qry->get();
             return view('report.index', compact('data'));
         }
 

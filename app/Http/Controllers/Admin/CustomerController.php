@@ -8,20 +8,37 @@ use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data['users'] = User::all();
+        $qry = User::query();
+
+        if ($request->isMethod('post')) {
+
+            $qry->when($request->email, function ($query, $email) {
+                return $query->where('email', $email);
+            });
+
+            $qry->when($request->role, function ($query, $role) {
+                return $query->where('role', $role);
+            });
+
+            $qry->when($request->status, function ($query, $status) {
+                return $query->where('status', $status);
+            });
+        }
+
+        $data['users'] = $qry->get();
         return view('customer.customer', compact('data'));
     }
 
     public function customersStatus(Request $request)
     {
         $change_status = User::where('id', $request->id)->first();
-        if ($change_status->status == 1) {
-            $change_status->status = 0;
+        if ($change_status->status == 'active') {
+            $change_status->status = 'inactive';
             $change_status->update();
-        } else if ($change_status->status == 0) {
-            $change_status->status = 1;
+        } else if ($change_status->status == 'inactive') {
+            $change_status->status = 'active';
             $change_status->update();
         }
         return response()->json([

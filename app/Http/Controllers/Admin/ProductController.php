@@ -16,7 +16,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $qry = User::join('products', 'users.id', '=', 'products.user_id')
-            ->select('products.*', 'users.seller_id');
+            ->select('products.*', 'users.seller_id','users.whats_number');
 
         if ($request->isMethod('post')) {
 
@@ -79,6 +79,7 @@ class ProductController extends Controller
         $product->cate_id = $request->cate_id;
         $product->prod_type = $request->prod_type;
         $product->commission = $request->commission;
+        $product->pmnl_commission = $request->pmnl_commission;
         $product->day_sale = $request->day_sale;
         $product->tot_remaining = $request->day_sale;
         $unique_no = Product::orderBy('id', 'DESC')->pluck('product_no')->first();
@@ -206,7 +207,7 @@ class ProductController extends Controller
 
     public function Reservations(Request $request)
     {
-        $data['reserve_products'] = Reserve::where('status', 1)->paginate(10);
+        $data['reserve_products'] = Reserve::where('status', 1)->get();
         return view('product.reserve_products', compact('data'));
     }
 

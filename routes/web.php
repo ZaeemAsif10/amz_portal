@@ -29,11 +29,13 @@ Route::post('/signup', [RegisterController::class, 'signup'])->name('signup');
 Route::get('/signup', [RegisterController::class, 'signup_view']);
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/', [HomeController::class, 'index'])->name('/');
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/profile/{id?}', [HomeController::class, 'Profile']);
+    Route::post('/profile_update', [HomeController::class, 'profileUpdate']);
 
     //customer routes
-    Route::get('customers', [CustomerController::class, 'index']);
+    Route::any('customers', [CustomerController::class, 'index']);
     Route::get('customers-status', [CustomerController::class, 'customersStatus']);
 
     //Products routes

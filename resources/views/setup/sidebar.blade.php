@@ -68,6 +68,8 @@
                         <ul style="display: none;">
                             <li><a href="{{ url('create-products') }}">Add Products</a></li>
                             <li><a href="{{ url('products') }}">View Products</a></li>
+                            <li><a href="{{ url('enabled') }}">Enabled Products</a></li>
+                            <li><a href="{{ url('disabled') }}">Disabled Products</a></li>
                         </ul>
                     </li>
                     <li class="submenu">
@@ -92,6 +94,13 @@
                                 class="menu-arrow"></span></a>
                         <ul style="display: none;">
                             <li><a href="{{ url('reservations') }}">Reserve Products</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="#"><i class="la la-cube"></i> <span> Report</span> <span
+                                class="menu-arrow"></span></a>
+                        <ul style="display: none;">
+                            <li><a href="{{ url('report') }}">Report</a></li>
                         </ul>
                     </li>
                 @endif

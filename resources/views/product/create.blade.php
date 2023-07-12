@@ -147,18 +147,9 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>PMNL Commission</label>
-                                        <input type="text" class="form-control" id="com_pml" readonly>
+                                        <input type="text" name="pmnl_commission" class="form-control" id="com_pml" readonly>
                                     </div>
                                 </div>
-                                {{-- <div class="col-md-12">
-                            <div class="form-group">
-                                <textarea class="form-control" cols="30" rows="6">
-                                    1. Review need to be submitted after 7 days of shipment received
-                                    2. Must use keyword for product search.
-                                    3. Buyer should be honest, scammer buyer is responsibility of agent.
-                                    4. Don't search with Brand Name.</textarea>
-                            </div>
-                        </div> --}}
 
                             </div>
                         </div>
@@ -195,29 +186,30 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
+
             $('#prodcutForm').on('change', '#prod_type', function(e) {
 
                 var type = $(this).val();
 
-                if (type == 'review') {
+                if (type == 'Review') {
                     $("#commission").attr("placeholder", "Minimum value should be 700");
                     $("#com_pml").val("175");
-                } else if (type == 'topreviwer') {
+                } else if (type == 'Top Reviwer') {
                     $("#commission").attr("placeholder", "Minimum value should be 1000");
                     $("#com_pml").val("175");
-                } else if (type == 'noreview') {
+                } else if (type == 'No Review') {
                     $("#commission").attr("placeholder", "Minimum value should be 150");
                     $("#com_pml").val("75");
-                } else if (type == 'feedback') {
+                } else if (type == 'Feedback') {
                     $("#commission").attr("placeholder", "Minimum value should be 250");
                     $("#com_pml").val("100");
-                } else if (type == 'rating') {
+                } else if (type == 'Rating') {
                     $("#commission").attr("placeholder", "Minimum value should be 250");
                     $("#com_pml").val("100");
-                } else if (type == 'ras') {
+                } else if (type == 'RAS') {
                     $("#commission").attr("placeholder", "Minimum value should be 250");
                     $("#com_pml").val("100");
-                } else if (type == 'rao') {
+                } else if (type == 'RAO') {
                     $("#commission").attr("placeholder", "Minimum value should be 150");
                     $("#com_pml").val("75");
                 } else {

@@ -127,12 +127,15 @@
                                 @foreach ($data['products'] as $key => $product)
                                     <tr class="text-center text-secondary">
                                         <td>
-                                            <img src="{{ url('public/assets/whats/whats2.jpg') }}" width="40"
-                                                height="40" alt="">
-                                            <p>{{ $product->seller_id }}</p>
+                                            <a href="https://api.whatsapp.com/send?phone={{ $product->whats_number }}"
+                                                target="_blank">
+                                                <img src="{{ url('public/assets/whats/whats2.jpg') }}" width="40"
+                                                    height="40" alt="">
+                                                <p>{{ $product->seller_id }}</p>
+                                            </a>
                                         </td>
                                         <td><a
-                                                href="{{ url('product_detail/' . $product->product_no) }}">{{ $product->product_no }}</a>
+                                                href="{{ url('product_detail/' . $product->product_no) }}" target="_blank">{{ $product->product_no }}</a>
                                         </td>
                                         <td>{{ $product->market }}</td>
                                         <td>{{ $product->day_sale }}</td>

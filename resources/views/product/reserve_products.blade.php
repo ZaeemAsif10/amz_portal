@@ -35,7 +35,7 @@
                                 <th>#</th>
                                 <th>User</th>
                                 <th>Product ID</th>
-                                <th>Time</th>
+                                {{-- <th>Time</th> --}}
                                 <th>Image</th>
                                 <th>Action</th>
                             </tr>
@@ -47,8 +47,8 @@
                                         <td>{{ $key + 1 }}</td>
                                         <td>{{ $reserve->users->name ?? '' }}</td>
                                         <td>{{ $reserve->products->product_no ?? '' }}</td>
-                                        <td class="countdown-cell">
-                                        </td>
+                                        {{-- <td class="countdown-cell">
+                                        </td> --}}
                                         <td>
                                             <img src="{{ url('public/uploads/image/' . ($reserve->products->image ?? '')) }}"
                                                 width="40" height="40" alt="No Image">
@@ -69,10 +69,6 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="float-right mt-3">
-                    {{ $data['reserve_products']->links('pagination::bootstrap-4') }}
-                </div>
-
             </div>
         </div>
         <!-- /Page Header -->

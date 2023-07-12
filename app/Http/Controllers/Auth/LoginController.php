@@ -48,7 +48,7 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
-        if (auth()->attempt(array('email' => $input['email'], 'password' => $input['password'], 'status' => 1))) {
+        if (auth()->attempt(array('email' => $input['email'], 'password' => $input['password'], 'status' => 'active'))) {
             return redirect('home');
         } else {
             return redirect()->route('login')

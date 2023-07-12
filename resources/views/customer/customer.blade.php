@@ -24,6 +24,37 @@
 
         <div class="card">
             <div class="card-body">
+
+                <form action="{{ url('customers') }}" method="POST">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-3">
+                            <input type="text" name="email" class="form-control"
+                                placeholder="Search by email...">
+                        </div>
+
+                        <div class="col-md-3">
+                            <select name="role" class="form-control">
+                                <option value="" selected disabled>choose role</option>
+                                <option value="pmm" {{ request('role') == 'pmm' ? 'selected' : '' }}>PMM</option>
+                                <option value="pm" {{ request('role') == 'pm' ? 'selected' : '' }}>PM</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <select name="status" class="form-control">
+                                <option value="" selected disabled>status</option>
+                                <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>InActive</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3 mt-2">
+                            <button type="submit" class="btn btn-primary w-100"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+
                 <div class="table-responsive mt-5">
                     <table class="table table-nowrap mb-0">
                         <thead>
@@ -32,20 +63,23 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th>Role</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="customerTable">
-                            @if (count($data['users']) > 0)
+                            {{-- @if (count($data['users']) > 0) --}}
                                 @foreach ($data['users'] as $key => $user)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->phone }}</td>
+                                        <td>{{ $user->role }}</td>
                                         <td>
-                                            @if ($user->status == 1)
+                                            {{-- {{$user->status}} --}}
+                                            @if ($user->status == 'active')
                                                 <span class="badge badge-success">Active</span>
                                             @else
                                                 <span class="badge badge-danger">InActive</span>
@@ -54,7 +88,7 @@
                                         <td>
                                             @php  $status='';   @endphp
                                             @isset($user->status)
-                                                @if ($user->status == 1)
+                                                @if ($user->status == 'active')
                                                     {{ $status = 'checked' }}
                                                 @else
                                                     {{ $status = '' }}
@@ -75,7 +109,7 @@
                                         </td>
                                     </tr>
                                 @endforeach
-                            @endif
+                            {{-- @endif --}}
                         </tbody>
                     </table>
                 </div>

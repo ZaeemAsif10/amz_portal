@@ -76,6 +76,9 @@
     <!-- Custom JS -->
     <script src="{{ asset('public/assets/js/app.js') }}"></script>
 
+    <!-- Jquery Print -->
+    <script src="{{ asset('public/assets/js/jQuery.print.min.js') }}"></script>
+
      <!-- CDN for Sweet Alert -->
      <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

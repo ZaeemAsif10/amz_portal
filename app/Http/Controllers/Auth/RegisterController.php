@@ -88,6 +88,7 @@ class RegisterController extends Controller
                 'cnic_front' => 'required',
                 'cnic_back' => 'required',
                 'phone' => 'required',
+                'whats_number' => 'required',
                 'account_h_name' => 'required',
                 'account_no' => 'required',
                 'role' => 'required',
@@ -98,6 +99,7 @@ class RegisterController extends Controller
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
             $user->phone = $request->phone;
+            $user->whats_number = $request->whats_number;
             $user->account_h_name = $request->account_h_name;
             $user->account_no = $request->account_no;
             $user->role = $request->role;

@@ -11,13 +11,13 @@
 
                     <div class="card-body">
                         @if (Session::has('error'))
-                        <div class="alert alert-danger alert-dismissible" role="alert">
-                            <button type="button" class="close" data-dismiss="alert">
-                                <i class="fa fa-times"></i>
-                            </button>
-                            <strong>Error !</strong> {{ session('error') }}
-                        </div>
-                    @endif
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                                <strong>Error !</strong> {{ session('error') }}
+                            </div>
+                        @endif
                         <form method="POST" action="{{ route('signup') }}" enctype="multipart/form-data">
                             @csrf
 
@@ -101,6 +101,17 @@
                                 </div>
 
                                 <div class="col-md-6">
+                                    <label for="">Whatsapp Number</label>
+                                    <input id="whats_number" type="number" class="form-control" name="whats_number"
+                                        required autocomplete="whats_number">
+                                    @error('whats_number')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-12 mt-3">
                                     <label for="">Select Role</label>
                                     <select name="role" class="form-control" required>
                                         <option value="" selected disabled>Choose Role</option>
@@ -117,29 +128,29 @@
                             </div>
 
 
-                                <h4 class="mt-3 mb-3">Bank Details</h4>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="">Account Holder Name</label>
-                                        <input id="account_h_name" type="text" class="form-control" name="account_h_name"
-                                            required autocomplete="account_h_name">
-                                        @error('account_h_name')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="">Bank Account/No</label>
-                                        <input id="account_no" type="number" class="form-control" name="account_no"
-                                            required autocomplete="account_no">
-                                        @error('account_no')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
+                            <h4 class="mt-3 mb-3">Bank Details</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="">Account Holder Name</label>
+                                    <input id="account_h_name" type="text" class="form-control" name="account_h_name"
+                                        required autocomplete="account_h_name">
+                                    @error('account_h_name')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
+                                <div class="col-md-6">
+                                    <label for="">Bank Account/No</label>
+                                    <input id="account_no" type="number" class="form-control" name="account_no"
+                                        required autocomplete="account_no">
+                                    @error('account_no')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
 
                             <div class="row">
                                 <div class="col-md-12 mt-4 text-center">
