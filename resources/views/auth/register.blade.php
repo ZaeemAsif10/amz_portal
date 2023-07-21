@@ -141,6 +141,16 @@
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
+                                    <label for="">Bank Name</label>
+                                    <input id="bank_name" type="text" class="form-control" name="bank_name"
+                                        required autocomplete="bank_name">
+                                    @error('bank_name')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="col-md-12 mt-2">
                                     <label for="">Bank Account/No</label>
                                     <input id="account_no" type="number" class="form-control" name="account_no"
                                         required autocomplete="account_no">

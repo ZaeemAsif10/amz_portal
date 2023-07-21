@@ -92,6 +92,7 @@ class RegisterController extends Controller
                 'account_h_name' => 'required',
                 'account_no' => 'required',
                 'role' => 'required',
+                'bank_name' => 'required',
             ]);
 
             $user = new User();
@@ -103,6 +104,7 @@ class RegisterController extends Controller
             $user->account_h_name = $request->account_h_name;
             $user->account_no = $request->account_no;
             $user->role = $request->role;
+            $user->bank_name = $request->bank_name;
             $seller_id = User::orderBy('id', 'DESC')->pluck('seller_id')->first();
             if ($seller_id == null or $seller_id == "") {
                 #If Table is Empty
