@@ -49,9 +49,12 @@
                                 @foreach ($data['products'] as $key => $product)
                                     <tr class="text-center text-secondary">
                                         <td>
-                                            <img src="{{ url('public/assets/whats/whats2.jpg') }}" width="40" height="40"
-                                                alt="">
-                                            <p>{{ $product->users->seller_id }}</p>
+                                            <a href="https://api.whatsapp.com/send?phone={{ $product->users->whats_number }}"
+                                                target="_blank">
+                                                <img src="{{ url('public/assets/whats/whats2.jpg') }}" width="35"
+                                                    height="35" alt="">
+                                                <p>{{ $product->users->seller_id }}</p>
+                                            </a>
                                         </td>
                                         <td>{{ $product->market }}</td>
                                         <td>{{ $product->day_sale }}</td>
@@ -65,7 +68,8 @@
                                                 height="40" alt="No Image">
                                         </td>
                                         <td>
-                                            <a href="" class="btn btn-success btn-sm">View</a>
+                                            <a href="{{ url('product_detail/' . $product->product_no) }}"
+                                                class="btn btn-success btn-sm">View</a>
                                             @if ($product->status == 1)
                                                 <a href="javascript:void(0)"
                                                     class="btn btn-success btn-sm btn_product_status"
@@ -111,16 +115,15 @@
                     success: function(response) {
 
                         if (response.status == 200) {
-                            alert(response.message);
-                            // toastr.success(response.message);
                             setTimeout(() => {
+                                toastr.success(response.message);
                                 window.location.reload();
                             }, 1000);
                         }
 
                     },
                     error: function() {
-                        alert('somthing went wrong');
+                        toastr.error('Somthing went wrong');
                     }
 
                 });

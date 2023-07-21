@@ -3,14 +3,12 @@
     <div class="sidebar-inner slimscroll">
         <div id="sidebar-menu" class="sidebar-menu">
             <ul>
-                <li class="submenu">
-                    <a href="{{ url('/') }}"><i class="la la-dashboard"></i> <span> Dashboard</span></a>
-                </li>
+                <li> <a href="{{ url('/') }}"><i class="fa fa-desktop" aria-hidden="true"></i> <span>Dashboard</span></a> </li>
 
                 {{-- Admin Sidebar Start --}}
                 @if (Auth::user()->role == 'admin')
                     <li class="submenu">
-                        <a href="#"><i class="la la-cube"></i> <span> Product Management</span> <span
+                        <a href="#"><i class="fa fa-sticky-note" aria-hidden="true"></i> <span> Products</span> <span
                                 class="menu-arrow"></span></a>
                         <ul style="display: none;">
                             <li><a href="{{ url('create-products') }}">Add Products</a></li>
@@ -20,7 +18,7 @@
                         </ul>
                     </li>
                     <li class="submenu">
-                        <a href="#"><i class="la la-cube"></i> <span> Orders</span> <span
+                        <a href="#"><i class="fa fa-shopping-basket" aria-hidden="true"></i> <span> Orders</span> <span
                                 class="menu-arrow"></span></a>
                         <ul style="display: none;">
                             <li><a href="{{ url('all_orders') }}">All Orders</a></li>
@@ -37,21 +35,21 @@
                         </ul>
                     </li>
                     <li class="submenu">
-                        <a href="#"><i class="la la-cube"></i> <span> Reservations</span> <span
+                        <a href="#"><i class="fa fa-money" aria-hidden="true"></i> <span> Reservations</span> <span
                                 class="menu-arrow"></span></a>
                         <ul style="display: none;">
                             <li><a href="{{ url('reservations') }}">Reserve Products</a></li>
                         </ul>
                     </li>
                     <li class="submenu">
-                        <a href="#"><i class="la la-cube"></i> <span> Customers</span> <span
+                        <a href="#"><i class="fa fa-male" aria-hidden="true"></i> <span> Customers</span> <span
                                 class="menu-arrow"></span></a>
                         <ul style="display: none;">
                             <li><a href="{{ url('customers') }}">All Customers</a></li>
                         </ul>
                     </li>
                     <li class="submenu">
-                        <a href="#"><i class="la la-cube"></i> <span> Report</span> <span
+                        <a href="#"><i class="fa fa-flag-o" aria-hidden="true"></i> <span> Report</span> <span
                                 class="menu-arrow"></span></a>
                         <ul style="display: none;">
                             <li><a href="{{ url('report') }}">Report</a></li>
@@ -63,8 +61,8 @@
                 {{-- PMM Sidebar Start --}}
                 @if (Auth::user()->role == 'pmm')
                     <li class="submenu">
-                        <a href="#"><i class="la la-cube"></i> <span> Product Management</span> <span
-                                class="menu-arrow"></span></a>
+                        <a href="#"><i class="fa fa-sticky-note" aria-hidden="true"></i> <span> Products</span> <span
+                            class="menu-arrow"></span></a>
                         <ul style="display: none;">
                             <li><a href="{{ url('create-products') }}">Add Products</a></li>
                             <li><a href="{{ url('products') }}">View Products</a></li>
@@ -73,8 +71,8 @@
                         </ul>
                     </li>
                     <li class="submenu">
-                        <a href="#"><i class="la la-cube"></i> <span> Orders</span> <span
-                                class="menu-arrow"></span></a>
+                        <a href="#"><i class="fa fa-shopping-basket" aria-hidden="true"></i> <span> Orders</span> <span
+                            class="menu-arrow"></span></a>
                         <ul style="display: none;">
                             <li><a href="{{ url('all_orders') }}">All Orders</a></li>
                             <li><a href="{{ url('ordered') }}">Ordered</a></li>
@@ -90,15 +88,15 @@
                         </ul>
                     </li>
                     <li class="submenu">
-                        <a href="#"><i class="la la-cube"></i> <span> Reservations</span> <span
-                                class="menu-arrow"></span></a>
+                        <a href="#"><i class="fa fa-money" aria-hidden="true"></i> <span> Reservations</span> <span
+                            class="menu-arrow"></span></a>
                         <ul style="display: none;">
                             <li><a href="{{ url('reservations') }}">Reserve Products</a></li>
                         </ul>
                     </li>
                     <li class="submenu">
-                        <a href="#"><i class="la la-cube"></i> <span> Report</span> <span
-                                class="menu-arrow"></span></a>
+                        <a href="#"><i class="fa fa-flag-o" aria-hidden="true"></i> <span> Report</span> <span
+                            class="menu-arrow"></span></a>
                         <ul style="display: none;">
                             <li><a href="{{ url('report') }}">Report</a></li>
                         </ul>
@@ -109,15 +107,15 @@
                 {{-- PM Sidebar Start --}}
                 @if (Auth::user()->role == 'pm')
                     <li class="submenu">
-                        <a href="#"><i class="la la-cube"></i> <span> Product Management</span> <span
-                                class="menu-arrow"></span></a>
+                        <a href="#"><i class="fa fa-sticky-note" aria-hidden="true"></i> <span> Products</span> <span
+                            class="menu-arrow"></span></a>
                         <ul style="display: none;">
                             <li><a href="{{ url('products') }}">View Products</a></li>
                         </ul>
                     </li>
                     <li class="submenu">
-                        <a href="#"><i class="la la-cube"></i> <span> Orders</span> <span
-                                class="menu-arrow"></span></a>
+                        <a href="#"><i class="fa fa-shopping-basket" aria-hidden="true"></i> <span> Orders</span> <span
+                            class="menu-arrow"></span></a>
                         <ul style="display: none;">
                             <li><a href="{{ url('all_orders') }}">All Orders</a></li>
                             <li><a href="{{ url('ordered') }}">Ordered</a></li>
@@ -133,8 +131,8 @@
                         </ul>
                     </li>
                     <li class="submenu">
-                        <a href="#"><i class="la la-cube"></i> <span> Reservations</span> <span
-                                class="menu-arrow"></span></a>
+                        <a href="#"><i class="fa fa-money" aria-hidden="true"></i> <span> Reservations</span> <span
+                            class="menu-arrow"></span></a>
                         <ul style="display: none;">
                             <li><a href="{{ url('reservations') }}">Reserve Products</a></li>
                         </ul>

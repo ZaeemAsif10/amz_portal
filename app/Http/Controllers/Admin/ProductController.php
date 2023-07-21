@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Reserve;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
@@ -15,8 +16,10 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $qry = User::join('products', 'users.id', '=', 'products.user_id')
-            ->select('products.*', 'users.seller_id','users.whats_number');
+        $qry = User::query();
+        $qry = $qry->join('products', 'users.id', '=', 'products.user_id')
+            ->select('products.*', 'users.seller_id', 'users.whats_number');
+        $qry = $qry->orderBy('id', 'DESC');
 
         if ($request->isMethod('post')) {
 
@@ -51,13 +54,13 @@ class ProductController extends Controller
 
     public function Enabled()
     {
-        $data['products'] = Product::where('status', 1)->paginate(10);
+        $data['products'] = Product::where('status', 1)->orderBy('id', 'DESC')->paginate(10);
         return view('product.enabled', compact('data'));
     }
 
     public function Disabled()
     {
-        $data['products'] = Product::where('status', 0)->paginate(10);
+        $data['products'] = Product::where('status', 0)->orderBy('id', 'DESC')->paginate(10);
         return view('product.disabled', compact('data'));
     }
 
@@ -180,6 +183,7 @@ class ProductController extends Controller
         $reserve = new Reserve();
         $reserve->user_id = Auth::user()->id;
         $reserve->product_no = $request->product_no;
+        $reserve->start_time = Carbon::now();
         $unique_check = Product::where('id', $request->id)->pluck('tot_remaining')->first();
         if ($unique_check > 0) {
             $reserve->save();
@@ -188,6 +192,24 @@ class ProductController extends Controller
         } else {
             return back()->with('error', 'Your today remaing days 0');
         }
+    }
+
+    public function getRemainingTime($cellId)
+    {
+        // Fetch the countdown record from the database based on the cellId
+        $countdown = Reserve::where('id', $cellId)->first();
+
+        if ($countdown) {
+            // Calculate the remaining time based on the created_at timestamp
+            $currentTime = time();
+            $createdAt = strtotime($countdown->created_at);
+            $remainingTime = max(3600 - ($currentTime - $createdAt), 0);
+
+            return response()->json(['remaining_time' => $remainingTime]);
+        }
+
+        // If no record found, return 0 as the remaining time
+        return response()->json(['remaining_time' => 0]);
     }
 
     public function updateReserve(Request $request)

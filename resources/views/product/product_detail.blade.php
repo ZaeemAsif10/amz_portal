@@ -57,12 +57,22 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title mb-0">Details</h3>
+                            <button type="button" class="btn btn-secondary btn-sm pull-right ml-2 btn_copy"
+                                onclick="copyDivContent()">Copy</button>
                             <a href="javascript:void(0)" class="btn btn-success btn-sm pull-right btn_edit_detail">Edit</a>
                             <a href="javascript:void(0)" class="btn btn-primary btn-sm pull-right btn_cancel"
                                 style="display: none;">Cancel</a>
                         </div>
                         <div class="card-body" id="view_detail">
                             <div class="row">
+
+                                <div id="sourceDiv" style="display: none !important;" class="d-flex">
+                                    Keyword : {{ $data['product_detail']->keyword }} ***** Sold By :
+                                    {{ $data['product_detail']->amz_seller }} ***** Brand Name :
+                                    {{ $data['product_detail']->brand_name }} ***** Product ID :
+                                    {{ $data['product_detail']->product_no }}
+                                </div>
+
                                 <div class="col-md-6">
                                     <h4>Keyword</h4>
                                     <p class="text-secondary">{{ $data['product_detail']->keyword }}</p>
@@ -260,6 +270,32 @@
 @endsection
 
 @section('scripts')
+
+    <script>
+        function copyDivContent() {
+            // Get the source div element
+            var sourceDiv = document.getElementById('sourceDiv');
+
+            // Create a temporary textarea element
+            var tempTextarea = document.createElement('textarea');
+
+            // Set the textarea value to the content of the source div
+            tempTextarea.value = sourceDiv.innerHTML;
+
+            // Append the textarea to the document
+            document.body.appendChild(tempTextarea);
+
+            // Select the textarea content
+            tempTextarea.select();
+
+            // Copy the selected content to the clipboard
+            document.execCommand('copy');
+
+            // Remove the temporary textarea from the document
+            document.body.removeChild(tempTextarea);
+        }
+    </script>
+
     <script>
         $(document).ready(function() {
 

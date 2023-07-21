@@ -35,6 +35,7 @@
         <form action="{{ url('update_order_detail') }}" method="POST" enctype="multipart/form-data" id="detail_from">
             @csrf
             <input type="hidden" name="edit_order_detail_id" value="{{ $data['order_detail']->order_limit }}">
+            <input type="hidden" name="pre_status" value="{{ $data['order_detail']->status }}">
             <div class="row">
                 <div class="col-md-4 text-center">
                     <div class="card">
@@ -62,6 +63,8 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title mb-0">Details</h3>
+                            <button type="button" class="btn btn-secondary btn-sm pull-right ml-2 btn_copy"
+                                onclick="copyDivContent()">Copy</button>
                             <a href="javascript:void(0)" class="btn btn-success btn-sm pull-right btn_edit_detail">Edit</a>
                             <a href="javascript:void(0)" class="btn btn-primary btn-sm pull-right btn_cancel"
                                 style="display: none;">Cancel</a>
@@ -69,12 +72,18 @@
 
                         <div class="card-body" id="view_detail">
                             <div class="row">
+
+                                <div id="sourceDiv" style="display: none;">
+                                    Order Number : {{ $data['order_detail']->order_no ?? '' }} ***** Customer PayPal :
+                                    {{ $data['order_detail']->c_email ?? '' }}
+                                </div>
+
                                 <div class="col-md-6">
                                     <h5>Order Number</h5>
                                     <p class="text-secondary">{{ $data['order_detail']->order_no ?? '' }}</p>
                                 </div>
                                 <div class="col-md-6">
-                                    <h5>Customer Email</h5>
+                                    <h5>Customer PayPal</h5>
                                     <p class="text-secondary">{{ $data['order_detail']->c_email ?? '' }}</p>
                                 </div>
                                 <div class="col-md-6">
@@ -113,6 +122,18 @@
                                     <h5>Commission</h5>
                                     <p class="text-secondary">{{ $data['order_detail']->products->commission ?? '' }}</p>
                                 </div>
+
+                                <div class="col-md-12 mt-3">
+                                    <h4>Order Status History :</h4>
+                                    @if (count($data['order_history']) > 0)
+                                        @foreach ($data['order_history'] as $history)
+                                            <p class="text-secondary">Order moved from <strong>{{ $history->pre_status }}</strong> to
+                                                <strong>{{ $history->status }}</strong> by <strong class="text-success">{{ $history->users->name }}</strong> On {{ $history->created_at }}
+                                            </p>
+                                        @endforeach
+                                    @endif
+                                </div>
+
                             </div>
                         </div>
 
@@ -169,7 +190,7 @@
                                             </option>
                                         </select>
                                     </div>
-                                    @elseif (Auth::user()->role == 'pmm')
+                                @elseif (Auth::user()->role == 'pmm')
                                     <div class="col-md-6 mt-2">
                                         <label>Status</label>
                                         <select name="status" class="form-control" required>
@@ -242,6 +263,32 @@
 @endsection
 
 @section('scripts')
+
+    <script>
+        function copyDivContent() {
+            // Get the source div element
+            var sourceDiv = document.getElementById('sourceDiv');
+
+            // Create a temporary textarea element
+            var tempTextarea = document.createElement('textarea');
+
+            // Set the textarea value to the content of the source div
+            tempTextarea.value = sourceDiv.innerHTML;
+
+            // Append the textarea to the document
+            document.body.appendChild(tempTextarea);
+
+            // Select the textarea content
+            tempTextarea.select();
+
+            // Copy the selected content to the clipboard
+            document.execCommand('copy');
+
+            // Remove the temporary textarea from the document
+            document.body.removeChild(tempTextarea);
+        }
+    </script>
+
     <script>
         $(document).ready(function() {
 
@@ -262,6 +309,7 @@
 
                 $('.btn_edit_detail').css('display', 'none');
                 $('.btn_cancel').css('display', 'block');
+                $('.btn_copy').css('display', 'none');
 
                 $('#view_detail').css('display', 'none');
                 $('#update_detail').css('display', 'block');
@@ -273,6 +321,7 @@
 
                 $('.btn_edit_detail').css('display', 'block');
                 $('.btn_cancel').css('display', 'none');
+                $('.btn_copy').css('display', 'block');
 
                 $('#view_detail').css('display', 'block');
                 $('#update_detail').css('display', 'none');

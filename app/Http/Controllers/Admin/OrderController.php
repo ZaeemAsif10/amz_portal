@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Order_history;
 use App\Models\Product;
 use App\Models\Reserve;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -15,20 +17,32 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $qry = Order::query();
+        $qry = User::query();
+        $qry = $qry->join('orders', 'users.id', '=', 'orders.user_id');
+        $qry = $qry->join('products', 'orders.product_no', '=', 'products.product_no')
+            ->select(
+                'orders.*',
+                'users.seller_id',
+                'users.whats_number',
+                'users.id',
+                'users.name',
+                'products.image',
+                'products.prod_type',
+                'products.market'
+            );
 
         if ($request->isMethod('post')) {
 
             $qry->when($request->c_email, function ($query, $c_email) {
-                return $query->where('c_email', $c_email);
+                return $query->where('orders.c_email', $c_email);
             });
 
             $qry->when($request->product_no, function ($query, $product_no) {
-                return $query->where('product_no', $product_no);
+                return $query->where('orders.product_no', $product_no);
             });
 
             $qry->when($request->order_no, function ($query, $order_no) {
-                return $query->where('order_no', 'like', '%' . $order_no . '%');
+                return $query->where('orders.order_no', $order_no);
             });
         }
 
@@ -112,6 +126,7 @@ class OrderController extends Controller
     public function orderDetail($order_limit)
     {
         $data['order_detail'] = Order::where('order_limit', $order_limit)->first();
+        $data['order_history'] = Order_history::where('order_limit', $order_limit)->get();
         return view('order.order_detail', compact('data'));
     }
 
@@ -166,27 +181,50 @@ class OrderController extends Controller
 
         $res = $order_detail->update();
         if ($res) {
+            $this->orderHistory($request);
             return back();
         }
     }
 
+    public function orderHistory(Request $request)
+    {
+        $order_history = new Order_history();
+        $order_history->user_id = Auth::user()->id;
+        $order_history->order_limit = $request->edit_order_detail_id;
+        $order_history->pre_status = $request->pre_status;
+        $order_history->status = $request->status;
+        $order_history->save();
+    }
+
     public function Ordered(Request $request)
     {
-        $qry = Order::query();
-        $qry = $qry->where('status', 'Ordered');
+        $qry = User::query();
+        $qry = $qry->join('orders', 'users.id', '=', 'orders.user_id');
+        $qry = $qry->join('products', 'orders.product_no', '=', 'products.product_no')
+            ->select(
+                'orders.*',
+                'users.seller_id',
+                'users.whats_number',
+                'users.id',
+                'users.name',
+                'products.image',
+                'products.prod_type',
+                'products.market'
+            );
+        $qry = $qry->where('orders.status', 'Ordered');
 
         if ($request->isMethod('post')) {
 
             $qry->when($request->c_email, function ($query, $c_email) {
-                return $query->where('c_email', $c_email);
+                return $query->where('orders.c_email', $c_email);
             });
 
             $qry->when($request->product_no, function ($query, $product_no) {
-                return $query->where('product_no', $product_no);
+                return $query->where('orders.product_no', $product_no);
             });
 
             $qry->when($request->order_no, function ($query, $order_no) {
-                return $query->where('order_no', 'like', '%' . $order_no . '%');
+                return $query->where('orders.order_no', $order_no);
             });
         }
 
@@ -196,22 +234,33 @@ class OrderController extends Controller
 
     public function Reviewed(Request $request)
     {
-
-        $qry = Order::query();
-        $qry = $qry->where('status', 'Reviewed');
+        $qry = User::query();
+        $qry = $qry->join('orders', 'users.id', '=', 'orders.user_id');
+        $qry = $qry->join('products', 'orders.product_no', '=', 'products.product_no')
+            ->select(
+                'orders.*',
+                'users.seller_id',
+                'users.whats_number',
+                'users.id',
+                'users.name',
+                'products.image',
+                'products.prod_type',
+                'products.market'
+            );
+        $qry = $qry->where('orders.status', 'Reviewed');
 
         if ($request->isMethod('post')) {
 
             $qry->when($request->c_email, function ($query, $c_email) {
-                return $query->where('c_email', $c_email);
+                return $query->where('orders.c_email', $c_email);
             });
 
             $qry->when($request->product_no, function ($query, $product_no) {
-                return $query->where('product_no', $product_no);
+                return $query->where('orders.product_no', $product_no);
             });
 
             $qry->when($request->order_no, function ($query, $order_no) {
-                return $query->where('order_no', 'like', '%' . $order_no . '%');
+                return $query->where('orders.order_no', $order_no);
             });
         }
 
@@ -221,21 +270,33 @@ class OrderController extends Controller
 
     public function Delivered(Request $request)
     {
-        $qry = Order::query();
-        $qry = $qry->where('status', 'Delivered');
+        $qry = User::query();
+        $qry = $qry->join('orders', 'users.id', '=', 'orders.user_id');
+        $qry = $qry->join('products', 'orders.product_no', '=', 'products.product_no')
+            ->select(
+                'orders.*',
+                'users.seller_id',
+                'users.whats_number',
+                'users.id',
+                'users.name',
+                'products.image',
+                'products.prod_type',
+                'products.market'
+            );
+        $qry = $qry->where('orders.status', 'Delivered');
 
         if ($request->isMethod('post')) {
 
             $qry->when($request->c_email, function ($query, $c_email) {
-                return $query->where('c_email', $c_email);
+                return $query->where('orders.c_email', $c_email);
             });
 
             $qry->when($request->product_no, function ($query, $product_no) {
-                return $query->where('product_no', $product_no);
+                return $query->where('orders.product_no', $product_no);
             });
 
             $qry->when($request->order_no, function ($query, $order_no) {
-                return $query->where('order_no', 'like', '%' . $order_no . '%');
+                return $query->where('orders.order_no', $order_no);
             });
         }
 
@@ -245,21 +306,33 @@ class OrderController extends Controller
 
     public function ReviewedDeleted(Request $request)
     {
-        $qry = Order::query();
-        $qry = $qry->where('status', 'ReviewedDeleted');
+        $qry = User::query();
+        $qry = $qry->join('orders', 'users.id', '=', 'orders.user_id');
+        $qry = $qry->join('products', 'orders.product_no', '=', 'products.product_no')
+            ->select(
+                'orders.*',
+                'users.seller_id',
+                'users.whats_number',
+                'users.id',
+                'users.name',
+                'products.image',
+                'products.prod_type',
+                'products.market'
+            );
+        $qry = $qry->where('orders.status', 'ReviewedDeleted');
 
         if ($request->isMethod('post')) {
 
             $qry->when($request->c_email, function ($query, $c_email) {
-                return $query->where('c_email', $c_email);
+                return $query->where('orders.c_email', $c_email);
             });
 
             $qry->when($request->product_no, function ($query, $product_no) {
-                return $query->where('product_no', $product_no);
+                return $query->where('orders.product_no', $product_no);
             });
 
             $qry->when($request->order_no, function ($query, $order_no) {
-                return $query->where('order_no', 'like', '%' . $order_no . '%');
+                return $query->where('orders.order_no', $order_no);
             });
         }
 
@@ -270,21 +343,33 @@ class OrderController extends Controller
     public function Refunded(Request $request)
     {
 
-        $qry = Order::query();
-        $qry = $qry->where('status', 'Refunded');
+        $qry = User::query();
+        $qry = $qry->join('orders', 'users.id', '=', 'orders.user_id');
+        $qry = $qry->join('products', 'orders.product_no', '=', 'products.product_no')
+            ->select(
+                'orders.*',
+                'users.seller_id',
+                'users.whats_number',
+                'users.id',
+                'users.name',
+                'products.image',
+                'products.prod_type',
+                'products.market'
+            );
+        $qry = $qry->where('orders.status', 'Refunded');
 
         if ($request->isMethod('post')) {
 
             $qry->when($request->c_email, function ($query, $c_email) {
-                return $query->where('c_email', $c_email);
+                return $query->where('orders.c_email', $c_email);
             });
 
             $qry->when($request->product_no, function ($query, $product_no) {
-                return $query->where('product_no', $product_no);
+                return $query->where('orders.product_no', $product_no);
             });
 
             $qry->when($request->order_no, function ($query, $order_no) {
-                return $query->where('order_no', 'like', '%' . $order_no . '%');
+                return $query->where('orders.order_no', $order_no);
             });
         }
 
@@ -294,21 +379,33 @@ class OrderController extends Controller
 
     public function onHold(Request $request)
     {
-        $qry = Order::query();
-        $qry = $qry->where('status', 'Onhold');
+        $qry = User::query();
+        $qry = $qry->join('orders', 'users.id', '=', 'orders.user_id');
+        $qry = $qry->join('products', 'orders.product_no', '=', 'products.product_no')
+            ->select(
+                'orders.*',
+                'users.seller_id',
+                'users.whats_number',
+                'users.id',
+                'users.name',
+                'products.image',
+                'products.prod_type',
+                'products.market'
+            );
+        $qry = $qry->where('orders.status', 'Onhold');
 
         if ($request->isMethod('post')) {
 
             $qry->when($request->c_email, function ($query, $c_email) {
-                return $query->where('c_email', $c_email);
+                return $query->where('orders.c_email', $c_email);
             });
 
             $qry->when($request->product_no, function ($query, $product_no) {
-                return $query->where('product_no', $product_no);
+                return $query->where('orders.product_no', $product_no);
             });
 
             $qry->when($request->order_no, function ($query, $order_no) {
-                return $query->where('order_no', 'like', '%' . $order_no . '%');
+                return $query->where('orders.order_no', $order_no);
             });
         }
 
@@ -318,21 +415,33 @@ class OrderController extends Controller
 
     public function Pending(Request $request)
     {
-        $qry = Order::query();
-        $qry = $qry->where('status', 'Pending');
+        $qry = User::query();
+        $qry = $qry->join('orders', 'users.id', '=', 'orders.user_id');
+        $qry = $qry->join('products', 'orders.product_no', '=', 'products.product_no')
+            ->select(
+                'orders.*',
+                'users.seller_id',
+                'users.whats_number',
+                'users.id',
+                'users.name',
+                'products.image',
+                'products.prod_type',
+                'products.market'
+            );
+        $qry = $qry->where('orders.status', 'Pending');
 
         if ($request->isMethod('post')) {
 
             $qry->when($request->c_email, function ($query, $c_email) {
-                return $query->where('c_email', $c_email);
+                return $query->where('orders.c_email', $c_email);
             });
 
             $qry->when($request->product_no, function ($query, $product_no) {
-                return $query->where('product_no', $product_no);
+                return $query->where('orders.product_no', $product_no);
             });
 
             $qry->when($request->order_no, function ($query, $order_no) {
-                return $query->where('order_no', 'like', '%' . $order_no . '%');
+                return $query->where('orders.order_no', $order_no);
             });
         }
 
@@ -342,21 +451,33 @@ class OrderController extends Controller
 
     public function Cancelled(Request $request)
     {
-        $qry = Order::query();
-        $qry = $qry->where('status', 'Cancelled');
+        $qry = User::query();
+        $qry = $qry->join('orders', 'users.id', '=', 'orders.user_id');
+        $qry = $qry->join('products', 'orders.product_no', '=', 'products.product_no')
+            ->select(
+                'orders.*',
+                'users.seller_id',
+                'users.whats_number',
+                'users.id',
+                'users.name',
+                'products.image',
+                'products.prod_type',
+                'products.market'
+            );
+        $qry = $qry->where('orders.status', 'Cancelled');
 
         if ($request->isMethod('post')) {
 
             $qry->when($request->c_email, function ($query, $c_email) {
-                return $query->where('c_email', $c_email);
+                return $query->where('orders.c_email', $c_email);
             });
 
             $qry->when($request->product_no, function ($query, $product_no) {
-                return $query->where('product_no', $product_no);
+                return $query->where('orders.product_no', $product_no);
             });
 
             $qry->when($request->order_no, function ($query, $order_no) {
-                return $query->where('order_no', 'like', '%' . $order_no . '%');
+                return $query->where('orders.order_no', $order_no);
             });
         }
 
@@ -366,21 +487,33 @@ class OrderController extends Controller
 
     public function Completed(Request $request)
     {
-        $qry = Order::query();
-        $qry = $qry->where('status', 'Completed');
+        $qry = User::query();
+        $qry = $qry->join('orders', 'users.id', '=', 'orders.user_id');
+        $qry = $qry->join('products', 'orders.product_no', '=', 'products.product_no')
+            ->select(
+                'orders.*',
+                'users.seller_id',
+                'users.whats_number',
+                'users.id',
+                'users.name',
+                'products.image',
+                'products.prod_type',
+                'products.market'
+            );
+        $qry = $qry->where('orders.status', 'Completed');
 
         if ($request->isMethod('post')) {
 
             $qry->when($request->c_email, function ($query, $c_email) {
-                return $query->where('c_email', $c_email);
+                return $query->where('orders.c_email', $c_email);
             });
 
             $qry->when($request->product_no, function ($query, $product_no) {
-                return $query->where('product_no', $product_no);
+                return $query->where('orders.product_no', $product_no);
             });
 
             $qry->when($request->order_no, function ($query, $order_no) {
-                return $query->where('order_no', 'like', '%' . $order_no . '%');
+                return $query->where('orders.order_no', $order_no);
             });
         }
 

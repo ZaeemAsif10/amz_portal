@@ -129,8 +129,8 @@
                                         <td>
                                             <a href="https://api.whatsapp.com/send?phone={{ $product->whats_number }}"
                                                 target="_blank">
-                                                <img src="{{ url('public/assets/whats/whats2.jpg') }}" width="40"
-                                                    height="40" alt="">
+                                                <img src="{{ url('public/assets/whats/whats2.jpg') }}" width="35"
+                                                    height="35" alt="">
                                                 <p>{{ $product->seller_id }}</p>
                                             </a>
                                         </td>

@@ -29,6 +29,7 @@ Route::post('/signup', [RegisterController::class, 'signup'])->name('signup');
 Route::get('/signup', [RegisterController::class, 'signup_view']);
 
 Route::group(['middleware' => ['auth']], function () {
+
     Route::get('/', [HomeController::class, 'index'])->name('/');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/profile/{id?}', [HomeController::class, 'Profile']);
@@ -52,11 +53,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('reservations', [ProductController::class, 'Reservations']);
     Route::get('remove_reservation', [ProductController::class, 'removeReservation']);
 
+    Route::get('/get_remaining_time/{cellId}', [ProductController::class, 'getRemainingTime']);
+
     //Order Routes
     Route::any('all_orders', [OrderController::class, 'index']);
     Route::get('create_order/{product_no?}', [OrderController::class, 'createOrder']);
     Route::post('order_now', [OrderController::class, 'orderNow']);
     Route::get('order_detail/{order_limit}', [OrderController::class, 'orderDetail']);
+
+
     Route::post('update_order_detail', [OrderController::class, 'updateOrderDetail']);
     Route::any('ordered', [OrderController::class, 'Ordered']);
     Route::any('reviewed', [OrderController::class, 'Reviewed']);

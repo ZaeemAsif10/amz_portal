@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -30,6 +31,14 @@ class HomeController extends Controller
         $data['cancelled'] = Order::where('status', 'Cancelled')->count();
         $data['refunded'] = Order::where('status', 'Refunded')->count();
         $data['ordered'] = Order::where('status', 'Ordered')->count();
+        $data['reviewed'] = Order::where('status', 'Reviewed')->count();
+        $data['delivered'] = Order::where('status', 'Delivered')->count();
+        $data['reviewedDeleted'] = Order::where('status', 'ReviewedDeleted')->count();
+        $data['onhold'] = Order::where('status', 'Onhold')->count();
+        $data['pending'] = Order::where('status', 'Pending')->count();
+        $data['completed'] = Order::where('status', 'Completed')->count();
+        $data['enabled'] = Product::where('status', 1)->count();
+        $data['disabled'] = Product::where('status', 0)->count();
         return view('home', compact('data'));
     }
 

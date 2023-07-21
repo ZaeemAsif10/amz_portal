@@ -65,7 +65,8 @@
                     <table class="table table-nowrap mb-0">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>Order</th>
+                                <th>Seller</th>
                                 <th>User</th>
                                 <th>Order Number</th>
                                 <th>Product</th>
@@ -82,15 +83,32 @@
                                 @foreach ($data['on_hold'] as $key => $order)
                                     <tr class="text-center text-secondary">
                                         <td >{{ $order->order_limit }}</td>
-                                        <td>{{ $order->users->name }}</td>
+                                        <td>
+                                            <a href="https://api.whatsapp.com/send?phone={{ $order->whats_number }}"
+                                                target="_blank">
+                                                <img src="{{ url('public/assets/whats/whats2.jpg') }}" width="35"
+                                                    height="35" alt="">
+                                                <p>{{ $order->seller_id }}</p>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="https://api.whatsapp.com/send?phone={{ $order->whats_number }}"
+                                                target="_blank">
+                                                <img src="{{ url('public/assets/whats/whats2.jpg') }}" width="35"
+                                                    height="35" alt="">
+                                            </a>
+                                            <a href="{{ url('profile/' . $order->id) }}">
+                                                <p>{{ $order->name }}</p>
+                                            </a>
+                                        </td>
                                         <td>{{ $order->order_no }}</td>
                                         <td>
-                                            <img src="{{ url('public/uploads/image/' . $order->products->image) }}"
+                                            <img src="{{ url('public/uploads/image/' . $order->image) }}"
                                                 width="30" height="40" alt="No Image">
                                         </td>
                                         <td>{{ $order->c_email }}</td>
-                                        <td>{{ $order->products->market }}</td>
-                                        <td>{{ $order->products->prod_type }}</td>
+                                        <td>{{ $order->market }}</td>
+                                        <td>{{ $order->prod_type }}</td>
                                         <td>{{ $order->date }}</td>
                                         <td>{{ $order->status }}</td>
                                         <td>
