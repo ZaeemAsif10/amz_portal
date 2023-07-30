@@ -23,6 +23,9 @@
     <!-- Lineawesome CSS -->
     <link rel="stylesheet" href="{{ asset('public/assets/css/line-awesome.min.css') }}">
 
+    <!-- Datatable CSS -->
+    <link rel="stylesheet" href="{{ asset('public/assets/css/dataTables.bootstrap4.min.css') }}">
+
     <!-- Toaster CSS -->
     <link rel="stylesheet" type="text/css" href="{{ asset('public/assets/css/toastr.css') }}">
 
@@ -73,14 +76,22 @@
     <!-- Slimscroll JS -->
     <script src="{{ asset('public/assets/js/jquery.slimscroll.min.js') }}"></script>
 
+    <!-- Datatable JS -->
+		<script src="{{ asset('public/assets/js/jquery.dataTables.min.js') }}"></script>
+		<script src="{{ asset('public/assets/js/dataTables.bootstrap4.min.js') }}"></script>
+
     <!-- Custom JS -->
     <script src="{{ asset('public/assets/js/app.js') }}"></script>
 
     <!-- Jquery Print -->
     <script src="{{ asset('public/assets/js/jQuery.print.min.js') }}"></script>
 
-     <!-- CDN for Sweet Alert -->
-     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Tooltip CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
+
+    <!-- CDN for Sweet Alert -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @yield('scripts')
 

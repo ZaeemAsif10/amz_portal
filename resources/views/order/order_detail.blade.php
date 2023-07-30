@@ -63,8 +63,8 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title mb-0">Details</h3>
-                            <button type="button" class="btn btn-secondary btn-sm pull-right ml-2 btn_copy"
-                                onclick="copyDivContent()">Copy</button>
+                            <button type="button" id="copy" class="btn btn-secondary btn-sm pull-right ml-2"
+                                data-clipboard-text="Order Number: {{ $data['order_detail']->order_no ?? '' }}  Customer PayPal: {{ $data['order_detail']->c_email ?? '' }}">Copy</button>
                             <a href="javascript:void(0)" class="btn btn-success btn-sm pull-right btn_edit_detail">Edit</a>
                             <a href="javascript:void(0)" class="btn btn-primary btn-sm pull-right btn_cancel"
                                 style="display: none;">Cancel</a>
@@ -72,12 +72,6 @@
 
                         <div class="card-body" id="view_detail">
                             <div class="row">
-
-                                <div id="sourceDiv" style="display: none;">
-                                    Order Number : {{ $data['order_detail']->order_no ?? '' }} ***** Customer PayPal :
-                                    {{ $data['order_detail']->c_email ?? '' }}
-                                </div>
-
                                 <div class="col-md-6">
                                     <h5>Order Number</h5>
                                     <p class="text-secondary">{{ $data['order_detail']->order_no ?? '' }}</p>
@@ -123,12 +117,20 @@
                                     <p class="text-secondary">{{ $data['order_detail']->products->commission ?? '' }}</p>
                                 </div>
 
+                                <div class="col-md-6">
+                                    <h5>Chinese Seller</h5>
+                                    <p class="text-secondary">{{ $data['order_detail']->products->chi_seller ?? '' }}</p>
+                                </div>
+
                                 <div class="col-md-12 mt-3">
                                     <h4>Order Status History :</h4>
                                     @if (count($data['order_history']) > 0)
                                         @foreach ($data['order_history'] as $history)
-                                            <p class="text-secondary">Order moved from <strong>{{ $history->pre_status }}</strong> to
-                                                <strong>{{ $history->status }}</strong> by <strong class="text-success">{{ $history->users->name }}</strong> On {{ $history->created_at }}
+                                            <p class="text-secondary">Order moved from
+                                                <strong>{{ $history->pre_status }}</strong> to
+                                                <strong>{{ $history->status }}</strong> by <strong
+                                                    class="text-success">{{ $history->users->name }}</strong> On
+                                                {{ $history->created_at }}
                                             </p>
                                         @endforeach
                                     @endif
@@ -140,6 +142,13 @@
                         <div class="card-body" style="display: none;" id="update_detail">
                             <h4>Update Details</h4>
                             <div class="row mb-3">
+
+                                <div class="col-md-12 mt-2">
+                                    <label>Customer Paypal</label>
+                                    <input type="text" name="c_email" class="form-control"
+                                        value="{{ $data['order_detail']->c_email }}" placeholder="c_email" required>
+                                </div>
+
                                 <div class="col-md-6 mt-2">
                                     <label>Order Number</label>
                                     <input type="text" name="order_no" class="form-control"
@@ -264,30 +273,6 @@
 
 @section('scripts')
 
-    <script>
-        function copyDivContent() {
-            // Get the source div element
-            var sourceDiv = document.getElementById('sourceDiv');
-
-            // Create a temporary textarea element
-            var tempTextarea = document.createElement('textarea');
-
-            // Set the textarea value to the content of the source div
-            tempTextarea.value = sourceDiv.innerHTML;
-
-            // Append the textarea to the document
-            document.body.appendChild(tempTextarea);
-
-            // Select the textarea content
-            tempTextarea.select();
-
-            // Copy the selected content to the clipboard
-            document.execCommand('copy');
-
-            // Remove the temporary textarea from the document
-            document.body.removeChild(tempTextarea);
-        }
-    </script>
 
     <script>
         $(document).ready(function() {
@@ -325,6 +310,42 @@
 
                 $('#view_detail').css('display', 'block');
                 $('#update_detail').css('display', 'none');
+
+            });
+
+
+
+            // Tooltip
+
+            $('#copy').tooltip({
+                trigger: 'click',
+                placement: 'top'
+            });
+
+            function setTooltip(message) {
+                $('#copy').tooltip('hide')
+                    .attr('data-original-title', message)
+                    .tooltip('show');
+            }
+
+            function hideTooltip() {
+                setTimeout(function() {
+                    $('#copy').tooltip('hide');
+                }, 1000);
+            }
+
+            // Clipboard
+            var clipboard = new ClipboardJS('#copy');
+
+            clipboard.on('success', function(e) {
+                setTooltip('Copied!');
+                hideTooltip();
+
+            });
+
+            clipboard.on('error', function(e) {
+                setTooltip('Failed!');
+                hideTooltip();
 
             });
         });

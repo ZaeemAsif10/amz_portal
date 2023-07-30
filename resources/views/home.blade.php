@@ -23,7 +23,7 @@
             </div>
 
             <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                <a href="{{ url('cancelled') }}" style="color: black;">
+                <a href="{{ url('cancelled/' . Auth::user()->id) }}" style="color: black;">
                     <div class="card dash-widget">
                         <div class="card-body">
                             <span class="dash-widget-icon"><i class="fa fa-ban" aria-hidden="true"></i></span>
@@ -36,7 +36,7 @@
                 </a>
             </div>
             <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                <a href="{{ url('refunded') }}" style="color: black;">
+                <a href="{{ url('refunded/' . Auth::user()->id) }}" style="color: black;">
                     <div class="card dash-widget">
                         <div class="card-body">
                             <span class="dash-widget-icon"><i class="fa fa-credit-card-alt" aria-hidden="true"></i></span>
@@ -49,7 +49,7 @@
                 </a>
             </div>
             <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                <a href="{{ url('ordered') }}" style="color: black;">
+                <a href="{{ url('ordered/' . Auth::user()->id) }}" style="color: black;">
                     <div class="card dash-widget">
                         <div class="card-body">
                             <span class="dash-widget-icon"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></span>
@@ -63,7 +63,7 @@
             </div>
 
             <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                <a href="{{ url('reviewed') }}" style="color: black;">
+                <a href="{{ url('reviewed/' . Auth::user()->id) }}" style="color: black;">
                     <div class="card dash-widget">
                         <div class="card-body">
                             <span class="dash-widget-icon"><i class="fa fa-star" aria-hidden="true"></i></span>
@@ -77,7 +77,7 @@
             </div>
 
             <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                <a href="{{ url('reviewed_deleted') }}" style="color: black;">
+                <a href="{{ url('reviewed_deleted/' . Auth::user()->id) }}" style="color: black;">
                     <div class="card dash-widget">
                         <div class="card-body">
                             <span class="dash-widget-icon"><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
@@ -91,7 +91,7 @@
             </div>
 
             <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                <a href="{{ url('delivered') }}" style="color: black;">
+                <a href="{{ url('delivered/' . Auth::user()->id) }}" style="color: black;">
                     <div class="card dash-widget">
                         <div class="card-body">
                             <span class="dash-widget-icon"><i class="fa fa-truck" aria-hidden="true"></i></span>
@@ -105,7 +105,7 @@
             </div>
 
             <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                <a href="{{ url('on_hold') }}" style="color: black;">
+                <a href="{{ url('on_hold/' . Auth::user()->id) }}" style="color: black;">
                     <div class="card dash-widget">
                         <div class="card-body">
                             <span class="dash-widget-icon"><i class="fa fa-pause-circle" aria-hidden="true"></i></span>
@@ -119,7 +119,7 @@
             </div>
 
             <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                <a href="{{ url('pending') }}" style="color: black;">
+                <a href="{{ url('pending/' . Auth::user()->id) }}" style="color: black;">
                     <div class="card dash-widget">
                         <div class="card-body">
                             <span class="dash-widget-icon"><i class="fa fa-hourglass-half" aria-hidden="true"></i></span>
@@ -132,33 +132,36 @@
                 </a>
             </div>
 
-            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                <a href="{{ url('enabled') }}" style="color: black;">
-                    <div class="card dash-widget">
-                        <div class="card-body">
-                            <span class="dash-widget-icon"><i class="fa fa-thumbs-up" aria-hidden="true"></i></span>
-                            <div class="dash-widget-info">
-                                <h3>{{ $data['enabled'] ?? '' }}</h3>
-                                <span>ENABLED</span>
+            @if (Auth::user()->role == 'admin' || Auth::user()->role == 'pmm')
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    <a href="{{ url('enabled') }}" style="color: black;">
+                        <div class="card dash-widget">
+                            <div class="card-body">
+                                <span class="dash-widget-icon"><i class="fa fa-thumbs-up" aria-hidden="true"></i></span>
+                                <div class="dash-widget-info">
+                                    <h3>{{ $data['enabled'] ?? '' }}</h3>
+                                    <span>ENABLED</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </a>
-            </div>
+                    </a>
+                </div>
 
-            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                <a href="{{ url('disabled') }}" style="color: black;">
-                    <div class="card dash-widget">
-                        <div class="card-body">
-                            <span class="dash-widget-icon"><i class="fa fa-thumbs-down" aria-hidden="true"></i></i></span>
-                            <div class="dash-widget-info">
-                                <h3>{{ $data['disabled'] ?? '' }}</h3>
-                                <span>DISABLED</span>
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    <a href="{{ url('disabled') }}" style="color: black;">
+                        <div class="card dash-widget">
+                            <div class="card-body">
+                                <span class="dash-widget-icon"><i class="fa fa-thumbs-down"
+                                        aria-hidden="true"></i></i></span>
+                                <div class="dash-widget-info">
+                                    <h3>{{ $data['disabled'] ?? '' }}</h3>
+                                    <span>DISABLED</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </a>
-            </div>
+                    </a>
+                </div>
+            @endif
 
         </div>
 

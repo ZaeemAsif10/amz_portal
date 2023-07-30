@@ -27,7 +27,7 @@ class CustomerController extends Controller
             });
         }
 
-        $data['users'] = $qry->get();
+        $data['users'] = $qry->latest()->paginate(20);
         return view('customer.customer', compact('data'));
     }
 
@@ -45,5 +45,11 @@ class CustomerController extends Controller
             'status' => 200,
             'message' => 'Status update successfully',
         ]);
+    }
+
+    public function customerDetails($customer_id)
+    {
+        $data['customer_detail'] = User::where('id', $customer_id)->first();
+        return view('customer.customer_details', compact('data'));
     }
 }

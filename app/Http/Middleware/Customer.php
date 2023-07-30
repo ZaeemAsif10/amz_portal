@@ -4,8 +4,9 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class Test
+class Customer
 {
     /**
      * Handle an incoming request.
@@ -16,6 +17,14 @@ class Test
      */
     public function handle(Request $request, Closure $next)
     {
-        return $next($request);
+        // Check if the user is authenticated
+        if (Auth::check()) {
+            $user = Auth::user();
+            if ($user->role == 'admin') {
+                return $next($request);
+            }
+        }
+
+        abort(403, 'Unauthorized action.');
     }
 }

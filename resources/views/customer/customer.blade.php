@@ -29,28 +29,34 @@
                     @csrf
                     <div class="row">
                         <div class="col-md-3">
-                            <input type="text" name="email" class="form-control"
-                                placeholder="Search by email...">
+                            <label for="">Email</label>
+                            <input type="text" name="email" class="form-control" placeholder="Search by email...">
                         </div>
 
                         <div class="col-md-3">
+                            <label for="">Role</label>
                             <select name="role" class="form-control">
                                 <option value="" selected disabled>choose role</option>
+                                <option value="" {{ request('role') == '' ? 'selected' : '' }}>All</option>
                                 <option value="pmm" {{ request('role') == 'pmm' ? 'selected' : '' }}>PMM</option>
                                 <option value="pm" {{ request('role') == 'pm' ? 'selected' : '' }}>PM</option>
                             </select>
                         </div>
 
                         <div class="col-md-3">
+                            <label for="">Status</label>
                             <select name="status" class="form-control">
                                 <option value="" selected disabled>status</option>
+                                <option value="" {{ request('status') == '' ? 'selected' : '' }}>All</option>
                                 <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
-                                <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>InActive</option>
+                                <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>InActive
+                                </option>
                             </select>
                         </div>
 
-                        <div class="col-md-3 mt-2">
-                            <button type="submit" class="btn btn-primary w-100"><i class="fa fa-search"></i></button>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary w-100" style="margin-top: 35px;"><i
+                                    class="fa fa-search"></i></button>
                         </div>
                     </div>
                 </form>
@@ -69,49 +75,50 @@
                             </tr>
                         </thead>
                         <tbody id="customerTable">
-                            {{-- @if (count($data['users']) > 0) --}}
-                                @foreach ($data['users'] as $key => $user)
-                                    <tr>
-                                        <td>{{ $key + 1 }}</td>
-                                        <td>{{ $user->name }}</td>
-                                        <td>{{ $user->email }}</td>
-                                        <td>{{ $user->phone }}</td>
-                                        <td>{{ $user->role }}</td>
-                                        <td>
-                                            {{-- {{$user->status}} --}}
+                            @foreach ($data['users'] as $key => $user)
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>
+                                        <a href="{{ url('customer_details/' . $user->id) }}">{{ $user->name }}</a>
+                                    </td>
+                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $user->phone }}</td>
+                                    <td>{{ $user->role }}</td>
+                                    <td>
+                                        {{-- {{$user->status}} --}}
+                                        @if ($user->status == 'active')
+                                            <span class="badge badge-success">Active</span>
+                                        @else
+                                            <span class="badge badge-danger">InActive</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @php  $status='';   @endphp
+                                        @isset($user->status)
                                             @if ($user->status == 'active')
-                                                <span class="badge badge-success">Active</span>
+                                                {{ $status = 'checked' }}
                                             @else
-                                                <span class="badge badge-danger">InActive</span>
+                                                {{ $status = '' }}
                                             @endif
-                                        </td>
-                                        <td>
-                                            @php  $status='';   @endphp
-                                            @isset($user->status)
-                                                @if ($user->status == 'active')
-                                                    {{ $status = 'checked' }}
-                                                @else
-                                                    {{ $status = '' }}
-                                                @endif
-                                            @endisset
-                                            <center>
-                                                <div class="form-group" style="display: inline-flex">
-                                                    <label class="switch">
-                                                        <input type="checkbox" {{ $status }} class="radio-button"
-                                                            name="auto_save" data="{{ $user->id }}">
-                                                        <span class="slider round"></span>
-                                                    </label>
-                                                </div>
-                                            </center>
-                                            {{-- <a href="javascript:void(0)" class="btn btn-success btn-sm btn_status"
-                                                data="{{ $user->id }}">Change
-                                                Status</a> --}}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            {{-- @endif --}}
+                                        @endisset
+                                        <center>
+                                            <div class="form-group" style="display: inline-flex">
+                                                <label class="switch">
+                                                    <input type="checkbox" {{ $status }} class="radio-button"
+                                                        name="auto_save" data="{{ $user->id }}">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </center>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
+                </div>
+
+                <div class="float-right mt-3">
+                    {{ $data['users']->links('pagination::bootstrap-4') }}
                 </div>
 
             </div>

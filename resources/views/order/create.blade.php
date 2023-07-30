@@ -39,7 +39,13 @@
 
                 <form action="{{ url('order_now') }}" method="POST" enctype="multipart/form-data">
                     @csrf
+
                     <input type="hidden" name="product_no" value="{{ $data['product_no']->product_no ?? '' }}">
+                    <input type="hidden" name="pmm_id" value="{{ $data['product_no']->pmm_id ?? '' }}">
+                    <input type="hidden" name="pmm_name" value="{{ $data['product_no']->users->name ?? '' }}">
+                    <input type="hidden" name="pmm_seller_id" value="{{ $data['product_no']->users->seller_id ?? '' }}">
+                    <input type="hidden" name="pmm_whats_number" value="{{ $data['product_no']->users->whats_number ?? '' }}">
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="row">

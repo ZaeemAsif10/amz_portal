@@ -18,6 +18,7 @@
                     </ul>
                 </div>
             </div>
+
         </div>
 
         <div class="card">
@@ -107,7 +108,7 @@
                 @endif
 
                 <div class="table-responsive mt-5">
-                    <table class="table table-nowrap mb-0">
+                    <table class="datatable table table-stripped mb-0">
                         <thead>
                             <tr>
                                 <th>Seller</th>
@@ -152,8 +153,13 @@
                                                 <div class="d-flex">
                                                     <form action="{{ url('reserve_now') }}" method="POST">
                                                         @csrf
+
                                                         <input type="hidden" name="product_no"
                                                             value="{{ $product->product_no }}">
+
+                                                            <input type="hidden" name="pmm_id"
+                                                                value="{{ $product->pmm_id }}">
+
                                                         <input type="hidden" name="id"
                                                             value="{{ $product->id }}">
                                                         <button type="submit" class="btn btn-secondary btn-sm">Reserve
@@ -186,9 +192,7 @@
                     </table>
 
                 </div>
-                <div class="float-right mt-3">
-                    {{ $data['products']->links('pagination::bootstrap-4') }}
-                </div>
+
 
             </div>
         </div>

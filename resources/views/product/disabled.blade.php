@@ -28,7 +28,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive mt-5">
-                    <table class="table table-nowrap mb-0">
+                    <table class="datatable table table-stripped mb-0">
                         <thead>
                             <tr>
                                 <th>Seller</th>
@@ -86,9 +86,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="float-right mt-3">
-                    {{ $data['products']->links('pagination::bootstrap-4') }}
-                </div>
+                
 
             </div>
         </div>

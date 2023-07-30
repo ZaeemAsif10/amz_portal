@@ -57,8 +57,8 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title mb-0">Details</h3>
-                            <button type="button" class="btn btn-secondary btn-sm pull-right ml-2 btn_copy"
-                                onclick="copyDivContent()">Copy</button>
+                            <button type="button" id="copy" class="btn btn-secondary btn-sm pull-right ml-2"
+                                data-clipboard-text="Keyword: {{ $data['product_detail']->keyword }}  Sold By: {{ $data['product_detail']->amz_seller }}  Brand Name: {{ $data['product_detail']->brand_name }}  Product ID: {{ $data['product_detail']->product_no }}">Copy</button>
                             <a href="javascript:void(0)" class="btn btn-success btn-sm pull-right btn_edit_detail">Edit</a>
                             <a href="javascript:void(0)" class="btn btn-primary btn-sm pull-right btn_cancel"
                                 style="display: none;">Cancel</a>
@@ -66,12 +66,6 @@
                         <div class="card-body" id="view_detail">
                             <div class="row">
 
-                                <div id="sourceDiv" style="display: none !important;" class="d-flex">
-                                    Keyword : {{ $data['product_detail']->keyword }} ***** Sold By :
-                                    {{ $data['product_detail']->amz_seller }} ***** Brand Name :
-                                    {{ $data['product_detail']->brand_name }} ***** Product ID :
-                                    {{ $data['product_detail']->product_no }}
-                                </div>
 
                                 <div class="col-md-6">
                                     <h4>Keyword</h4>
@@ -121,6 +115,41 @@
                                     <h4>Overall Sale </h4>
                                     <p class="text-secondary">{{ $data['product_detail']->tot_sale }}</p>
                                 </div>
+
+                                <div class="col-md-6 mt-3">
+                                    @if ($data['product_detail']->text_fee_cover == 1)
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="text_fee_cover" {{ $data['product_detail']->text_fee_cover == 1 ? 'checked' : '' }} id="exampleCheckbox">
+                                            <label class="form-check-label" for="exampleCheckbox">
+                                                Text Fee Cover
+                                            </label>
+                                          </div>
+                                        @else
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="text_fee_cover" id="exampleCheckbox">
+                                            <label class="form-check-label" for="exampleCheckbox">
+                                                Text Fee not Cover
+                                            </label>
+                                          </div>
+                                    @endif
+
+                                    @if ($data['product_detail']->paypal_fee_cover == 1)
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="text_fee_cover" {{ $data['product_detail']->paypal_fee_cover == 1 ? 'checked' : '' }} id="exampleCheckbox">
+                                            <label class="form-check-label" for="exampleCheckbox">
+                                                Paypal Fee Cover
+                                            </label>
+                                          </div>
+                                        @else
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="text_fee_cover" id="exampleCheckbox">
+                                            <label class="form-check-label" for="exampleCheckbox">
+                                                Paypal Fee Not Cover
+                                            </label>
+                                          </div>
+                                    @endif
+                                </div>
+
                             </div>
                         </div>
                         <div class="card-body" style="display: none;" id="update_detail">
@@ -271,30 +300,6 @@
 
 @section('scripts')
 
-    <script>
-        function copyDivContent() {
-            // Get the source div element
-            var sourceDiv = document.getElementById('sourceDiv');
-
-            // Create a temporary textarea element
-            var tempTextarea = document.createElement('textarea');
-
-            // Set the textarea value to the content of the source div
-            tempTextarea.value = sourceDiv.innerHTML;
-
-            // Append the textarea to the document
-            document.body.appendChild(tempTextarea);
-
-            // Select the textarea content
-            tempTextarea.select();
-
-            // Copy the selected content to the clipboard
-            document.execCommand('copy');
-
-            // Remove the temporary textarea from the document
-            document.body.removeChild(tempTextarea);
-        }
-    </script>
 
     <script>
         $(document).ready(function() {
@@ -318,6 +323,42 @@
 
                 $('#view_detail').css('display', 'block');
                 $('#update_detail').css('display', 'none');
+
+            });
+
+
+
+            // Tooltip
+
+            $('#copy').tooltip({
+                trigger: 'click',
+                placement: 'top'
+            });
+
+            function setTooltip(message) {
+                $('#copy').tooltip('hide')
+                    .attr('data-original-title', message)
+                    .tooltip('show');
+            }
+
+            function hideTooltip() {
+                setTimeout(function() {
+                    $('#copy').tooltip('hide');
+                }, 1000);
+            }
+
+            // Clipboard
+            var clipboard = new ClipboardJS('#copy');
+
+            clipboard.on('success', function(e) {
+                setTooltip('Copied!');
+                hideTooltip();
+
+            });
+
+            clipboard.on('error', function(e) {
+                setTooltip('Failed!');
+                hideTooltip();
 
             });
         });

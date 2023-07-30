@@ -62,7 +62,7 @@
                 @endif
 
                 <div class="table-responsive mt-5">
-                    <table class="table table-nowrap mb-0">
+                    <table class="datatable table table-stripped mb-0">
                         <thead>
                             <tr>
                                 <th>Order</th>
@@ -84,14 +84,40 @@
                                     <tr class="text-center text-secondary">
                                         <td >{{ $order->order_limit }}</td>
                                         <td>
+                                            @if (Auth::user()->role == 'pmm')
+                                            <a href="https://api.whatsapp.com/send?phone={{ $order->pmm_whats_number }}"
+                                                target="_blank">
+                                                <img src="{{ url('public/assets/whats/whats2.jpg') }}" width="35"
+                                                    height="35" alt="">
+                                                <p>{{ $order->pmm_seller_id }}</p>
+                                                <p>{{ $order->pmm_name }}</p>
+                                            </a>
+                                            @elseif (Auth::user()->role == 'pm')
                                             <a href="https://api.whatsapp.com/send?phone={{ $order->whats_number }}"
                                                 target="_blank">
                                                 <img src="{{ url('public/assets/whats/whats2.jpg') }}" width="35"
                                                     height="35" alt="">
                                                 <p>{{ $order->seller_id }}</p>
+                                                <p>{{ $order->name }}</p>
                                             </a>
+                                            @endif
+
+
                                         </td>
                                         <td>
+                                            @if (Auth::user()->role == 'pm')
+
+                                            <a href="https://api.whatsapp.com/send?phone={{ $order->pmm_whats_number }}"
+                                                target="_blank">
+                                                <img src="{{ url('public/assets/whats/whats2.jpg') }}" width="35"
+                                                    height="35" alt="">
+                                            </a>
+                                            <a href="{{ url('profile/' . $order->id) }}">
+                                                <p>{{ $order->pmm_name }}</p>
+                                            </a>
+
+                                            @elseif (Auth::user()->role == 'pmm')
+
                                             <a href="https://api.whatsapp.com/send?phone={{ $order->whats_number }}"
                                                 target="_blank">
                                                 <img src="{{ url('public/assets/whats/whats2.jpg') }}" width="35"
@@ -100,6 +126,10 @@
                                             <a href="{{ url('profile/' . $order->id) }}">
                                                 <p>{{ $order->name }}</p>
                                             </a>
+
+                                            @endif
+
+
                                         </td>
                                         <td>{{ $order->order_no }}</td>
                                         <td>
@@ -123,9 +153,6 @@
                         </tbody>
                     </table>
 
-                </div>
-                <div class="float-right mt-3">
-                    {{ $data['completed']->links('pagination::bootstrap-4') }}
                 </div>
 
             </div>

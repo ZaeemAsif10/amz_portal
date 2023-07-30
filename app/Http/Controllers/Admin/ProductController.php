@@ -11,15 +11,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Session;
 
 class ProductController extends Controller
 {
+
     public function index(Request $request)
     {
         $qry = User::query();
         $qry = $qry->join('products', 'users.id', '=', 'products.user_id')
-            ->select('products.*', 'users.seller_id', 'users.whats_number');
-        $qry = $qry->orderBy('id', 'DESC');
+            ->select('products.*', 'users.id as pmm_id', 'users.seller_id', 'users.whats_number');
 
         if ($request->isMethod('post')) {
 
@@ -48,71 +49,99 @@ class ProductController extends Controller
             });
         }
 
-        $data['products'] = $qry->paginate(10);
+        $qry = Auth::user()->role == 'pmm' ?
+            $qry->where('products.user_id', Auth::user()->id) :
+            $qry->orderBy('id','desc');
+
+        $data['products'] = $qry->get();
         return view('product.product', compact('data'));
     }
 
     public function Enabled()
     {
-        $data['products'] = Product::where('status', 1)->orderBy('id', 'DESC')->paginate(10);
+        $qry = Product::query();
+        $qry = $qry->where('status', 1);
+        $qry = Auth::user()->role == 'pmm' ?
+            $qry->where('user_id', Auth::user()->id) :
+            $qry->latest();
+
+        $data['products'] = $qry->get();
         return view('product.enabled', compact('data'));
     }
 
     public function Disabled()
     {
-        $data['products'] = Product::where('status', 0)->orderBy('id', 'DESC')->paginate(10);
+        $qry = Product::query();
+        $qry = $qry->where('status', 0);
+        $qry = Auth::user()->role == 'pmm' ?
+            $qry->where('user_id', Auth::user()->id) :
+            $qry->latest();
+
+        $data['products'] = $qry->get();
         return view('product.disabled', compact('data'));
     }
 
-    public function createProducts()
+    public function createProducts(Request $request)
     {
         $categories = Category::all();
-        return view('product.create', compact('categories'));
+        $data['product'] = User::where('id', $request->id)->first();;
+        return view('product.create', compact('categories', 'data'));
     }
 
     public function storeProducts(Request $request)
     {
-        $product = new Product();
-        $product->user_id = Auth::user()->id;
-        $product->keyword = $request->keyword;
-        $product->brand_name = $request->brand_name;
-        $product->amz_seller = $request->amz_seller;
-        $product->market = $request->market;
-        $product->chi_seller = $request->chi_seller;
-        $product->cate_id = $request->cate_id;
-        $product->prod_type = $request->prod_type;
-        $product->commission = $request->commission;
-        $product->pmnl_commission = $request->pmnl_commission;
-        $product->day_sale = $request->day_sale;
-        $product->tot_remaining = $request->day_sale;
-        $unique_no = Product::orderBy('id', 'DESC')->pluck('product_no')->first();
-        $product->tot_sale = $request->tot_sale;
-        if ($unique_no == null or $unique_no == "") {
-            #If Table is Empty
-            $unique_no = 1;
+        if ($request->commission < $request->commission_val) {
+            return back()->with('com_error', 'Minimum commission is ' . $request->commission_val);
         } else {
-            #If Table has Already some Data
-            $unique_no = $unique_no + 1;
-        }
-        $product->product_no = $unique_no;
+            $product = new Product();
+            $product->user_id = Auth::user()->id;
+            $product->pmm_id = $request->pmm_id;
+            $product->keyword = $request->keyword;
+            $product->brand_name = $request->brand_name;
+            $product->amz_seller = $request->amz_seller;
+            $product->market = $request->market;
+            $product->chi_seller = $request->chi_seller;
+            $product->cate_id = $request->cate_id;
+            $product->prod_type = $request->prod_type;
+            $product->commission = $request->commission;
+            $product->pmnl_commission = $request->pmnl_commission;
+            $product->day_sale = $request->day_sale;
+            $product->tot_remaining = $request->day_sale;
+            $product->text_fee_cover = $request->text_fee_cover ? 1 : 0;
+            $product->paypal_fee_cover = $request->paypal_fee_cover ? 1 : 0;
+            $unique_no = Product::orderBy('id', 'DESC')->pluck('product_no')->first();
+            $product->tot_sale = $request->tot_sale;
+            if ($unique_no == null or $unique_no == "") {
+                #If Table is Empty
+                $unique_no = 1;
+            } else {
+                #If Table has Already some Data
+                $unique_no = $unique_no + 1;
+            }
+            $product->product_no = $unique_no;
 
-        if ($request->hasFile('amz_image')) {
-            $file = $request->file('amz_image');
-            $extension = $file->getClientOriginalExtension();
-            $filename = time() . '.' . $extension;
-            $file->move('public/uploads/amz/image/', $filename);
-            $product->amz_image = $filename;
-        }
+            if ($request->hasFile('amz_image')) {
+                $file = $request->file('amz_image');
+                $extension = $file->getClientOriginalExtension();
+                $filename = time() . '.' . $extension;
+                $file->move('public/uploads/amz/image/', $filename);
+                $product->amz_image = $filename;
+            }
 
-        if ($request->hasFile('image')) {
-            $file1 = $request->file('image');
-            $extension1 = $file1->getClientOriginalExtension();
-            $filename1 = time() . '.' . $extension1;
-            $file1->move('public/uploads/image/', $filename1);
-            $product->image = $filename1;
+            if ($request->hasFile('image')) {
+                $file1 = $request->file('image');
+                $extension1 = $file1->getClientOriginalExtension();
+                $filename1 = time() . '.' . $extension1;
+                $file1->move('public/uploads/image/', $filename1);
+                $product->image = $filename1;
+            }
+            $res = $product->save();
+            if ($res) {
+                return back()->with('success', 'Product add successfully');
+            } else {
+                return back()->with('error', 'Something went wrong');
+            }
         }
-        $product->save();
-        return back()->with('success', 'Product add successfully');
     }
 
     public function updateStatus(Request $request)
@@ -182,6 +211,7 @@ class ProductController extends Controller
 
         $reserve = new Reserve();
         $reserve->user_id = Auth::user()->id;
+        $reserve->pmm_id = $request->pmm_id;
         $reserve->product_no = $request->product_no;
         $reserve->start_time = Carbon::now();
         $unique_check = Product::where('id', $request->id)->pluck('tot_remaining')->first();
@@ -190,7 +220,7 @@ class ProductController extends Controller
             $this->updateReserve($request);
             return back()->with('success', 'Product Reserve now');
         } else {
-            return back()->with('error', 'Your today remaing days 0');
+            return back()->with('error', 'Today remianing limit is zero');
         }
     }
 
@@ -229,13 +259,27 @@ class ProductController extends Controller
 
     public function Reservations(Request $request)
     {
-        $data['reserve_products'] = Reserve::where('status', 1)->get();
+
+        $qry = Reserve::query();
+        $qry = $qry->where('status', 1);
+
+        if ($request->role == 'admin') {
+            $qry->latest();
+        } else if ($request->role == 'pmm') {
+            $qry->where('pmm_id', $request->pmm_id)->latest();
+        } else {
+            $qry->where('user_id', Auth::user()->id)->latest();
+        }
+
+        // return $qry->get();
+
+        $data['reserve_products'] = $qry->get();
         return view('product.reserve_products', compact('data'));
     }
 
     public function removeReservation(Request $request)
     {
-        $remove_reserve = Reserve::where('id', $request->id)->first();
+        $remove_reserve = Reserve::where('id', $request->id)->where('status', 1)->first();
         $remove_reserve->status = 0;
         $res = $remove_reserve->update();
         if ($res) {

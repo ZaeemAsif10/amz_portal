@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Web\WebController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -28,20 +29,30 @@ Auth::routes();
 Route::post('/signup', [RegisterController::class, 'signup'])->name('signup');
 Route::get('/signup', [RegisterController::class, 'signup_view']);
 
-Route::group(['middleware' => ['auth']], function () {
 
-    Route::get('/', [HomeController::class, 'index'])->name('/');
+// Your desired default route URI
+$desiredDefaultRoute = 'buyer';
+
+// Redirect the root URL to the desired default route
+Route::redirect('/', $desiredDefaultRoute);
+
+Route::any('buyer', [WebController::class, 'index'])->name('/');
+
+
+Route::group(['middleware' => ['auth', 'activity']], function () {
+
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/profile/{id?}', [HomeController::class, 'Profile']);
     Route::post('/profile_update', [HomeController::class, 'profileUpdate']);
 
     //customer routes
-    Route::any('customers', [CustomerController::class, 'index']);
-    Route::get('customers-status', [CustomerController::class, 'customersStatus']);
+    Route::any('customers', [CustomerController::class, 'index'])->middleware('role');
+    Route::get('customers-status', [CustomerController::class, 'customersStatus'])->middleware('role');
+    Route::get('customer_details/{customer_id?}', [CustomerController::class, 'customerDetails'])->middleware('role');
 
     //Products routes
     Route::any('products', [ProductController::class, 'index']);
-    Route::get('create-products', [ProductController::class, 'createProducts']);
+    Route::get('create-products/{id?}', [ProductController::class, 'createProducts']);
     Route::post('store-products', [ProductController::class, 'storeProducts']);
     Route::get('enabled', [ProductController::class, 'Enabled']);
     Route::get('disabled', [ProductController::class, 'Disabled']);
@@ -50,28 +61,28 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('update_product_detail', [ProductController::class, 'updateProductDetail']);
 
     Route::post('reserve_now', [ProductController::class, 'reserveNow']);
-    Route::get('reservations', [ProductController::class, 'Reservations']);
+    Route::get('reservations/{role?}/{pmm_id?}', [ProductController::class, 'Reservations']);
     Route::get('remove_reservation', [ProductController::class, 'removeReservation']);
 
     Route::get('/get_remaining_time/{cellId}', [ProductController::class, 'getRemainingTime']);
 
     //Order Routes
-    Route::any('all_orders', [OrderController::class, 'index']);
+    Route::any('all_orders/{pmm_id?}', [OrderController::class, 'index']);
     Route::get('create_order/{product_no?}', [OrderController::class, 'createOrder']);
     Route::post('order_now', [OrderController::class, 'orderNow']);
     Route::get('order_detail/{order_limit}', [OrderController::class, 'orderDetail']);
-
-
     Route::post('update_order_detail', [OrderController::class, 'updateOrderDetail']);
-    Route::any('ordered', [OrderController::class, 'Ordered']);
-    Route::any('reviewed', [OrderController::class, 'Reviewed']);
-    Route::any('delivered', [OrderController::class, 'Delivered']);
-    Route::any('reviewed_deleted', [OrderController::class, 'ReviewedDeleted']);
-    Route::any('refunded', [OrderController::class, 'Refunded']);
-    Route::any('on_hold', [OrderController::class, 'onHold']);
-    Route::any('pending', [OrderController::class, 'Pending']);
-    Route::any('cancelled', [OrderController::class, 'Cancelled']);
-    Route::any('completed', [OrderController::class, 'Completed']);
+
+
+    Route::any('ordered/{pmm_id?}', [OrderController::class, 'Ordered']);
+    Route::any('reviewed/{pmm_id?}', [OrderController::class, 'Reviewed']);
+    Route::any('delivered/{pmm_id?}', [OrderController::class, 'Delivered']);
+    Route::any('reviewed_deleted/{pmm_id?}', [OrderController::class, 'ReviewedDeleted']);
+    Route::any('refunded/{pmm_id?}', [OrderController::class, 'Refunded']);
+    Route::any('on_hold/{pmm_id?}', [OrderController::class, 'onHold']);
+    Route::any('pending/{pmm_id?}', [OrderController::class, 'Pending']);
+    Route::any('cancelled/{pmm_id?}', [OrderController::class, 'Cancelled']);
+    Route::any('completed/{pmm_id?}', [OrderController::class, 'Completed']);
 
     //Report route
     Route::any('report', [ReportController::class, 'index']);

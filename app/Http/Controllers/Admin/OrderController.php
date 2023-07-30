@@ -31,6 +31,8 @@ class OrderController extends Controller
                 'products.market'
             );
 
+        // return $qry->get();
+
         if ($request->isMethod('post')) {
 
             $qry->when($request->c_email, function ($query, $c_email) {
@@ -46,12 +48,22 @@ class OrderController extends Controller
             });
         }
 
-        $data['orders'] = $qry->paginate(10);
+        if (Auth::user()->role == 'admin') {
+            $qry->latest();
+        } else if (Auth::user()->role == 'pmm') {
+            $qry->where('orders.pmm_id', $request->pmm_id);
+        } else {
+            $qry->where('orders.user_id', Auth::user()->id);
+        }
+
+        $data['orders'] = $qry->get();
         return view('order.order', compact('data'));
     }
 
     public function createOrder($product_no)
     {
+        // $qry = $qry->where('product_no', $request->pmm_id);
+
         $data['product_no'] = Product::where('product_no', $product_no)->first();
         return view('order.create', compact('data'));
     }
@@ -60,6 +72,10 @@ class OrderController extends Controller
     {
         $order = new Order();
         $order->user_id = Auth::user()->id;
+        $order->pmm_id = $request->pmm_id;
+        $order->pmm_name = $request->pmm_name;
+        $order->pmm_seller_id = $request->pmm_seller_id;
+        $order->pmm_whats_number = $request->pmm_whats_number;
         $order->product_no = $request->product_no;
         $order->order_no = $request->order_no;
         $order->c_email = $request->c_email;
@@ -97,7 +113,7 @@ class OrderController extends Controller
         if ($res) {
             $this->updateTotalSale($request);
             $this->reserveComplete($request);
-            return redirect('all_orders')->with('success', 'Order created successfully');
+            return redirect('all_orders/' . $request->pmm_id)->with('success', 'Order created successfully');
         }
     }
 
@@ -133,6 +149,7 @@ class OrderController extends Controller
     public function updateOrderDetail(Request $request)
     {
         $order_detail = Order::where('order_limit', $request->edit_order_detail_id)->first();
+        $order_detail->c_email = $request->c_email;
         $order_detail->order_no = $request->order_no;
         $order_detail->review_link = $request->review_link;
         if ($request->status == 'Reviewed') {
@@ -211,7 +228,6 @@ class OrderController extends Controller
                 'products.prod_type',
                 'products.market'
             );
-        $qry = $qry->where('orders.status', 'Ordered');
 
         if ($request->isMethod('post')) {
 
@@ -228,7 +244,16 @@ class OrderController extends Controller
             });
         }
 
-        $data['ordered'] = $qry->paginate(10);
+        $qry = $qry->where('orders.status', 'Ordered');
+        if (Auth::user()->role == 'admin') {
+            $qry->latest();
+        } else if (Auth::user()->role == 'pmm') {
+            $qry->where('orders.pmm_id', $request->pmm_id);
+        } else {
+            $qry->where('orders.user_id', Auth::user()->id);
+        }
+
+        $data['ordered'] = $qry->get();
         return view('order.ordered', compact('data'));
     }
 
@@ -247,7 +272,6 @@ class OrderController extends Controller
                 'products.prod_type',
                 'products.market'
             );
-        $qry = $qry->where('orders.status', 'Reviewed');
 
         if ($request->isMethod('post')) {
 
@@ -264,7 +288,16 @@ class OrderController extends Controller
             });
         }
 
-        $data['reviewed'] = $qry->paginate(10);
+        $qry = $qry->where('orders.status', 'Reviewed');
+        if (Auth::user()->role == 'admin') {
+            $qry->latest();
+        } else if (Auth::user()->role == 'pmm') {
+            $qry->where('orders.pmm_id', $request->pmm_id);
+        } else {
+            $qry->where('orders.user_id', Auth::user()->id);
+        }
+
+        $data['reviewed'] = $qry->get();
         return view('order.reviewed', compact('data'));
     }
 
@@ -283,7 +316,6 @@ class OrderController extends Controller
                 'products.prod_type',
                 'products.market'
             );
-        $qry = $qry->where('orders.status', 'Delivered');
 
         if ($request->isMethod('post')) {
 
@@ -300,7 +332,16 @@ class OrderController extends Controller
             });
         }
 
-        $data['delivered'] = $qry->paginate(10);
+        $qry = $qry->where('orders.status', 'Delivered');
+        if (Auth::user()->role == 'admin') {
+            $qry->latest();
+        } else if (Auth::user()->role == 'pmm') {
+            $qry->where('orders.pmm_id', $request->pmm_id);
+        } else {
+            $qry->where('orders.user_id', Auth::user()->id);
+        }
+
+        $data['delivered'] = $qry->get();
         return view('order.review_submited_pending', compact('data'));
     }
 
@@ -319,7 +360,6 @@ class OrderController extends Controller
                 'products.prod_type',
                 'products.market'
             );
-        $qry = $qry->where('orders.status', 'ReviewedDeleted');
 
         if ($request->isMethod('post')) {
 
@@ -336,7 +376,16 @@ class OrderController extends Controller
             });
         }
 
-        $data['reviewed_deleted'] = $qry->paginate(10);
+        $qry = $qry->where('orders.status', 'ReviewedDeleted');
+        if (Auth::user()->role == 'admin') {
+            $qry->latest();
+        } else if (Auth::user()->role == 'pmm') {
+            $qry->where('orders.pmm_id', $request->pmm_id);
+        } else {
+            $qry->where('orders.user_id', Auth::user()->id);
+        }
+
+        $data['reviewed_deleted'] = $qry->get();
         return view('order.review_deleted', compact('data'));
     }
 
@@ -356,7 +405,6 @@ class OrderController extends Controller
                 'products.prod_type',
                 'products.market'
             );
-        $qry = $qry->where('orders.status', 'Refunded');
 
         if ($request->isMethod('post')) {
 
@@ -373,7 +421,16 @@ class OrderController extends Controller
             });
         }
 
-        $data['refunded'] = $qry->paginate(10);
+        $qry = $qry->where('orders.status', 'Refunded');
+        if (Auth::user()->role == 'admin') {
+            $qry->latest();
+        } else if (Auth::user()->role == 'pmm') {
+            $qry->where('orders.pmm_id', $request->pmm_id);
+        } else {
+            $qry->where('orders.user_id', Auth::user()->id);
+        }
+
+        $data['refunded'] = $qry->get();
         return view('order.refunded', compact('data'));
     }
 
@@ -392,7 +449,6 @@ class OrderController extends Controller
                 'products.prod_type',
                 'products.market'
             );
-        $qry = $qry->where('orders.status', 'Onhold');
 
         if ($request->isMethod('post')) {
 
@@ -409,7 +465,16 @@ class OrderController extends Controller
             });
         }
 
-        $data['on_hold'] = $qry->paginate(10);
+        $qry = $qry->where('orders.status', 'Onhold');
+        if (Auth::user()->role == 'admin') {
+            $qry->latest();
+        } else if (Auth::user()->role == 'pmm') {
+            $qry->where('orders.pmm_id', $request->pmm_id);
+        } else {
+            $qry->where('orders.user_id', Auth::user()->id);
+        }
+
+        $data['on_hold'] = $qry->get();
         return view('order.on_hold', compact('data'));
     }
 
@@ -428,7 +493,6 @@ class OrderController extends Controller
                 'products.prod_type',
                 'products.market'
             );
-        $qry = $qry->where('orders.status', 'Pending');
 
         if ($request->isMethod('post')) {
 
@@ -445,7 +509,16 @@ class OrderController extends Controller
             });
         }
 
-        $data['pending'] = $qry->paginate(10);
+        $qry = $qry->where('orders.status', 'Pending');
+        if (Auth::user()->role == 'admin') {
+            $qry->latest();
+        } else if (Auth::user()->role == 'pmm') {
+            $qry->where('orders.pmm_id', $request->pmm_id);
+        } else {
+            $qry->where('orders.user_id', Auth::user()->id);
+        }
+
+        $data['pending'] = $qry->get();
         return view('order.pending', compact('data'));
     }
 
@@ -464,7 +537,6 @@ class OrderController extends Controller
                 'products.prod_type',
                 'products.market'
             );
-        $qry = $qry->where('orders.status', 'Cancelled');
 
         if ($request->isMethod('post')) {
 
@@ -481,7 +553,16 @@ class OrderController extends Controller
             });
         }
 
-        $data['cancelled'] = $qry->paginate(10);
+        $qry = $qry->where('orders.status', 'Cancelled');
+        if (Auth::user()->role == 'admin') {
+            $qry->latest();
+        } else if (Auth::user()->role == 'pmm') {
+            $qry->where('orders.pmm_id', $request->pmm_id);
+        } else {
+            $qry->where('orders.user_id', Auth::user()->id);
+        }
+
+        $data['cancelled'] = $qry->get();
         return view('order.cancelled', compact('data'));
     }
 
@@ -500,7 +581,6 @@ class OrderController extends Controller
                 'products.prod_type',
                 'products.market'
             );
-        $qry = $qry->where('orders.status', 'Completed');
 
         if ($request->isMethod('post')) {
 
@@ -517,7 +597,16 @@ class OrderController extends Controller
             });
         }
 
-        $data['completed'] = $qry->paginate(10);
+        $qry = $qry->where('orders.status', 'Completed');
+        if (Auth::user()->role == 'admin') {
+            $qry->latest();
+        } else if (Auth::user()->role == 'pmm') {
+            $qry->where('orders.pmm_id', $request->pmm_id);
+        } else {
+            $qry->where('orders.user_id', Auth::user()->id);
+        }
+
+        $data['completed'] = $qry->get();
         return view('order.completed', compact('data'));
     }
 }
